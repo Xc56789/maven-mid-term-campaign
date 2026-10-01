@@ -1,0 +1,25 @@
+{
+  "method": "Independent copied checkout and newly created virtual environment; no originating campaign sibling directories",
+  "python": "3.12.14",
+  "exact_delivered_html_preserved": true,
+  "delivered_html_sha256": "435ebebc2a49ca9795dffde364bba3b2b15cac88b24f5aafebaea041d77326a1",
+  "checks": [
+    {
+      "mode": "windows",
+      "full_rebuild": "passed",
+      "interaction_and_download_checks": 21,
+      "pdf_pages": 6
+    },
+    {
+      "mode": "licensed",
+      "full_rebuild": "passed",
+      "interaction_and_download_checks": 21,
+      "pdf_pages": 6
+    }
+  ],
+  "limitations": [
+    "Node VM checks are not a real browser or phone test",
+    "OFL font mode intentionally differs in glyph shape from saved Microsoft YaHei materials",
+    "Rebuilt PDF byte hashes may vary with metadata and rendering environment"
+  ]
+}

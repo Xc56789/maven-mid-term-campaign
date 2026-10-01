@@ -1,0 +1,27 @@
+{
+  "method": "Static HTML checks plus Node VM with DOM stubs; no browser or real phone execution",
+  "passed": [
+    "Embedded material integrity: archive-poster",
+    "Embedded material integrity: archive-task-card",
+    "Embedded material integrity: archive-campaign",
+    "Embedded material integrity: night-poster",
+    "Embedded material integrity: night-task-card",
+    "Embedded material integrity: night-campaign",
+    "Embedded material integrity: club-poster",
+    "Embedded material integrity: club-task-card",
+    "Embedded material integrity: club-campaign",
+    "Embedded material integrity: notice",
+    "Embedded material integrity: prompts",
+    "No sibling files or remote asset dependencies; responsive breakpoints present",
+    "Original gift inventory and drawing rules; no prior guaranteed pair rewards",
+    "Mobile poster collapses; default edition initializes",
+    "Three themes synchronize poster, palette and download edition",
+    "Concept and scenario substitution",
+    "Copy and selection fallback",
+    "Progress count",
+    "PNG/PDF/TXT download bytes and preview target",
+    "Download button follows selected edition",
+    "User text inserted literally"
+  ],
+  "htmlBytes": 24856388
+}

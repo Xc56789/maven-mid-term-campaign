@@ -1,0 +1,16 @@
+{
+  "source": "https://github.com/google/fonts/tree/main/ofl/notosanssc",
+  "source_sha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da",
+  "license": "SIL Open Font License 1.1; Reserved Font Name Source is not used for the derivatives",
+  "derivatives": [
+    {
+      "file": "MavenCampaignSans-Regular.ttf",
+      "wght": 400
+    },
+    {
+      "file": "MavenCampaignSans-Bold.ttf",
+      "wght": 700
+    }
+  ],
+  "tool": "fonttools 4.66.1 varLib.instancer; renamed family MavenCampaignSans"
+}

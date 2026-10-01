@@ -1,0 +1,252 @@
+{
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 231,
+      "sha256": "ce335e57ffa905c069464574a590ae6058095f17820f64f452d4b8b3470eaea8"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 95,
+      "sha256": "25e7f9117977aa841df855c1f4f92f0f6344d112faf79247353d296a6e8211c1"
+    },
+    {
+      "path": "NOTICE.md",
+      "bytes": 1625,
+      "sha256": "e288d57e791deb28ed90d892d039aab04931875824fe8f34591d3b6edf52ead6"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4884,
+      "sha256": "08246e3788062682ec4b7b8a71aefb197049a136a7ef679fc691802fb7bb9ccd"
+    },
+    {
+      "path": "assets/fonts/BricolageGrotesque-Bold.ttf",
+      "bytes": 90952,
+      "sha256": "a737b146fe0d77ffe8a86e3cd16700dd431d3b1e420d4fd80e142cd68a1cb50d"
+    },
+    {
+      "path": "assets/fonts/BricolageGrotesque-OFL.txt",
+      "bytes": 4403,
+      "sha256": "0e4f4eb8534bc66a76aca13dd19c1f9731b2008866b29ccff182b764649df9b4"
+    },
+    {
+      "path": "assets/fonts/DERIVATION.json",
+      "bytes": 519,
+      "sha256": "f7efde8ccafa449b2e9f37521e85b71c5a9fca3a6a6a5fc337da0bdb5ec45fd6"
+    },
+    {
+      "path": "assets/fonts/MavenCampaignSans-Bold.ttf",
+      "bytes": 10585592,
+      "sha256": "53837f8d45af22c104d5aa6ecd5d5a88a61c890cb36eac8609b16fd6be87ec5f"
+    },
+    {
+      "path": "assets/fonts/MavenCampaignSans-Regular.ttf",
+      "bytes": 10596076,
+      "sha256": "843be7e23d1383d5243785aad749abd86bdeaa12306555f8f3281a3305a2d5e8"
+    },
+    {
+      "path": "assets/fonts/NotoSansSC-OFL.txt",
+      "bytes": 4388,
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
+    },
+    {
+      "path": "assets/fonts/NotoSansSC-variable.ttf",
+      "bytes": 17772300,
+      "sha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da"
+    },
+    {
+      "path": "assets/illustrations/archive-hero.png",
+      "bytes": 2440148,
+      "sha256": "569533f690f264e8df47233c955d1eee62bdf29c964df21a9c8e71da3c9eab4d"
+    },
+    {
+      "path": "assets/illustrations/club-hero.png",
+      "bytes": 2155504,
+      "sha256": "af1fc22b9c41d2b8b0209db12e325ea7e3406abb0c38cda92768f8a9481aad09"
+    },
+    {
+      "path": "assets/illustrations/night-hero.png",
+      "bytes": 1859095,
+      "sha256": "6f620159d978dfcbb45997d8bd4690f1857f16c11a06d0e2a933f3cee4cb8eb0"
+    },
+    {
+      "path": "assets/references/activity-example.pdf",
+      "bytes": 392007,
+      "sha256": "b9789e25d4238458546b519b438aec06599817d7feda9489e9d17e4cc6aa35b4"
+    },
+    {
+      "path": "assets/references/maven-blue-poster-reference.png",
+      "bytes": 1695813,
+      "sha256": "e8389b4346af0b700fc2f863a1dee18eafabd4e0ef9f0f1cc68f95d8f2ddd646"
+    },
+    {
+      "path": "assets/references/maven-character-reference.jpg",
+      "bytes": 344616,
+      "sha256": "7a244bc7a6880cc0359a3d121d9e76da6cf8eee1667dfa76b965c3db96c83f6e"
+    },
+    {
+      "path": "assets/references/maven-keychain-reference.png",
+      "bytes": 350067,
+      "sha256": "1f7a7da3b1ef388b33e2aef0ef38e04a3f7b70e1e079bb22e1dcd1ca26f540e9"
+    },
+    {
+      "path": "assets/references/national-day-reference.jpg",
+      "bytes": 147386,
+      "sha256": "fb1e48b74e3c35c779e6c966a694c16b904b37a6f0eb156d20c6b5d2e7d80f5d"
+    },
+    {
+      "path": "assets/references/tote-design-reference.png",
+      "bytes": 379101,
+      "sha256": "33f4e8deeda8c768c16ad473e538e64537b160b0bc479b5faa2ca6d49a47f3f3"
+    },
+    {
+      "path": "assets/references/tote-photo-reference.png",
+      "bytes": 2334116,
+      "sha256": "01557ce5f7b79d0aff092591eebce3a8966fdd3877d06d2f49bfe1ee506b9ef7"
+    },
+    {
+      "path": "content/campaign.json",
+      "bytes": 10960,
+      "sha256": "43572bc3bb993280f691612618c7583de45dfd9a7b7e16b6e0584548b92552f2"
+    },
+    {
+      "path": "docs/editing.md",
+      "bytes": 2164,
+      "sha256": "fccfee4efc82abf11d351923948303e6beeafd6850d88388e540e25286f18aa6"
+    },
+    {
+      "path": "docs/embedded-materials.json",
+      "bytes": 2468,
+      "sha256": "84fec85ee71712ee458c44f449b385448a5153639af514cc01e49c2f5f7cf6a5"
+    },
+    {
+      "path": "docs/illustration-prompts.md",
+      "bytes": 3979,
+      "sha256": "5f741589b0201dd9196e2256e6fd48f09ece0c45fd72e64bd8f32bcdd1cfcebe"
+    },
+    {
+      "path": "docs/provenance.md",
+      "bytes": 1907,
+      "sha256": "375de5c37ebfdef8a633df78d16349fa6ff4fd79b2161b0026d7f9bb5808e80f"
+    },
+    {
+      "path": "docs/reproduction-check.json",
+      "bytes": 836,
+      "sha256": "72b665120c4b0b793451f4158763cf23552e20842c8b4cca8b97b70800569894"
+    },
+    {
+      "path": "docs/validation.json",
+      "bytes": 1221,
+      "sha256": "4e10a2bac96f95393d1999d7842d9d76abd1871dae87c5e71e9608246a4633b6"
+    },
+    {
+      "path": "index.html",
+      "bytes": 24856388,
+      "sha256": "435ebebc2a49ca9795dffde364bba3b2b15cac88b24f5aafebaea041d77326a1"
+    },
+    {
+      "path": "materials/archive-campaign.pdf",
+      "bytes": 4622887,
+      "sha256": "10f4a4b84775a4d27dbbbaf78a938469dd04b745bc057b1634a58836973aa774"
+    },
+    {
+      "path": "materials/archive-poster.png",
+      "bytes": 2008060,
+      "sha256": "4aa198ca56baf43bc4f7f7dbc77c25229643b1fa3288257411aa8f4a09e7a75f"
+    },
+    {
+      "path": "materials/archive-task-card.png",
+      "bytes": 313144,
+      "sha256": "745660ba7310de59796bf837d3dcdaa0b8684b10612e3bba0cc3cbb0af7cbf99"
+    },
+    {
+      "path": "materials/club-campaign.pdf",
+      "bytes": 3792763,
+      "sha256": "23bf30972b30e74e60c52c288c94a15b6620ce3f91e8bf9a283789f404c33dda"
+    },
+    {
+      "path": "materials/club-poster.png",
+      "bytes": 1669730,
+      "sha256": "a73afec8322058da93c0c8f2781bb9e43e0504dbd9ad4e19badadcec46a677e7"
+    },
+    {
+      "path": "materials/club-task-card.png",
+      "bytes": 314287,
+      "sha256": "0bcddec4a0d0ee5d37788481293acb6039170a592f81a80e9f3974b07741ad09"
+    },
+    {
+      "path": "materials/night-campaign.pdf",
+      "bytes": 4015612,
+      "sha256": "a66c0d16191f1941c958db60edbaf448590921fcd6751b1e089eafc4a6764fe6"
+    },
+    {
+      "path": "materials/night-poster.png",
+      "bytes": 1568449,
+      "sha256": "c6bbddc6854abc026b7ebf6916570e1763075d973e731660dba36ca845f83249"
+    },
+    {
+      "path": "materials/night-task-card.png",
+      "bytes": 313192,
+      "sha256": "f281ef11306f2be617445e5293c760d66d438be7e1b51d6ea3d79f53fa28ba3b"
+    },
+    {
+      "path": "materials/提问句-定稿.txt",
+      "bytes": 1390,
+      "sha256": "41790fad69bde5cbf8687f648e0c4659605a52d6474e03fdb499199f7a86a1ba"
+    },
+    {
+      "path": "materials/群公告-定稿.txt",
+      "bytes": 1435,
+      "sha256": "4c4be3a0f43d170f89b3082078ed30b5d162f22c4b1ce4c0b56c71b0e34a54a6"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 31,
+      "sha256": "aff9e2a7514ab38c61169ff48cd7e414e424068c9216e3a9e277318c38a8dac8"
+    },
+    {
+      "path": "src/build_html.py",
+      "bytes": 9428,
+      "sha256": "cb61a026b32e31f0fe43019bfc1aba6c582ac518e8f1062d7473951f1b525e82"
+    },
+    {
+      "path": "src/campaign.css",
+      "bytes": 7043,
+      "sha256": "bd526ef271e0af97ac4e6b72adec37398eb7b08ef966f1f5c95dea3246e1fb05"
+    },
+    {
+      "path": "src/check-standalone.cjs",
+      "bytes": 6381,
+      "sha256": "dd38cedaf7d8d257de337b8e11f9333001338048740e03c22a78e572c76b5d31"
+    },
+    {
+      "path": "src/derive_fonts.py",
+      "bytes": 833,
+      "sha256": "cb40cc3a7c0d4c3f54314e4e356765be74ea7eb378d227c369c490b9dbb46970"
+    },
+    {
+      "path": "src/interactions.js",
+      "bytes": 3341,
+      "sha256": "24f726ce4dabdb7b3e99fe0daa361ba8dea60ed1a82f154822ce09acab672f0a"
+    },
+    {
+      "path": "src/layout.py",
+      "bytes": 5404,
+      "sha256": "c18a9cf769adae9fd457296a3e2dc8c34561033e0d03d0c53d9cdd05b64cd496"
+    },
+    {
+      "path": "src/rebuild.py",
+      "bytes": 1363,
+      "sha256": "ddf6c79098ac229099b16ff7b64ec53f1868116794b1259cb7df14956e577f0c"
+    }
+  ],
+  "excludes": [
+    "docs/file-manifest.json"
+  ],
+  "checks": [
+    "allowlisted campaign files only",
+    "no common credential signatures or originating absolute workspace paths",
+    "exact existing HTML and material bytes preserved in Git"
+  ]
+}
