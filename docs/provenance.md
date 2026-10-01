@@ -20,3 +20,7 @@ No production application source, course export, student records, chat logs, cre
 ## Task wording revision, 2026-10-02
 
 At the owner's request, step 2 now checks exam arrangements rather than binding WeChat; step 3 requests a lecture concept comparison table; step 4 is one school-coffee-shop case with three basic questions, waiting for an answer before explanation; step 5 uses the new title and removes the extra connection/source instruction; step 6 recovers Quiz and Diagram in Artifacts, returns to their originating conversation and asks for an example retaining key English terms. The default case background is school coffee shop and remains editable. All three visual editions, embedded downloads and editable sources were updated together. Gift quantities and drawing rules are unchanged. This updates campaign instructions only, not the Maven application.
+
+## Copy simplification, 2026-10-02
+
+Removed the introductory headline and paragraphs from the web page, the extra task heading, progress counter and checkboxes, and the concept/background inputs. Removed answer-correctness slogans from all current campaign materials, including poster and task-card footers, announcement and metadata. Step 1 now enters a course; step 3 asks Maven to identify and compare two core lecture concepts; later requests refer to those concepts in the same conversation without A/B placeholders. The poster retains “六条线索，一桩小案。” as requested. Gift inventory and drawing rules remain unchanged. This entry supersedes earlier references to customizable concept or scenario inputs.

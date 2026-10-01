@@ -8,7 +8,7 @@
 
 在页面切换视觉版本，再点击下载按钮，即可保存相应版本的材料。微信文件预览器可能限制 HTML 脚本或下载；这种情况下先保存文件，再用系统浏览器打开。页面适配手机与电脑，但尚未做真机浏览器验收。
 
-本页提供活动指引和提问句；真正的学习互动在学生自己的 [Maven](https://ask-maven.com/) 课程中进行。勾选只记本页进度，不自动核验任务、连接账号、开奖或发奖。
+本页提供活动指引和提问句；真正的学习互动在学生自己的 [Maven](https://ask-maven.com/) 课程中进行。任务审核、开奖和发奖按课程群通知进行。
 
 ## 文件地图
 
@@ -18,7 +18,7 @@
 | `materials/` | 三版 PNG 海报、PNG 任务卡、双页 PDF；群公告与提问句 TXT |
 | `content/campaign.json` | 可编辑的任务、提示词、礼品配置、视觉主题、卡片文本和群公告 |
 | `src/campaign.css` | 页面样式与手机布局 |
-| `src/interactions.js` | 视觉切换、提问句填充、复制、进度与下载逻辑 |
+| `src/interactions.js` | 视觉切换、提问句复制与下载逻辑 |
 | `src/layout.py` | 海报和任务卡的矢量排版、字体选择 |
 | `src/build_html.py` | 把文案、样式、脚本及下载材料嵌入 HTML |
 | `src/rebuild.py` | 一条命令重建 PDF、PNG 和独立 HTML |
@@ -68,7 +68,7 @@ node src/check-standalone.cjs
 
 ## 检查范围
 
-检查脚本验证主题切换、提示词替换、复制回退、进度、PNG/PDF/TXT 下载内容和所有内置文件 SHA-256。它使用 Node VM 和 DOM 桩，不是浏览器或真机测试。原 PDF 六页已渲染查看；仓库发布前还做了独立目录重建检查，见 `docs/reproduction-check.json`。
+检查脚本验证主题切换、任务文案、复制回退、PNG/PDF/TXT 下载内容和所有内置文件 SHA-256。它使用 Node VM 和 DOM 桩，不是浏览器或真机测试。原 PDF 六页已渲染查看；仓库发布前还做了独立目录重建检查，见 `docs/reproduction-check.json`。
 
 仓库仅含活动材料，不含 Maven 应用源码、课程资料、学生数据、账户凭据或服务器配置。建立本仓库没有部署或修改 Maven 生产网站。
 

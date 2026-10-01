@@ -17,12 +17,10 @@
     "Revised exam background, concept comparison, one case-and-quiz task, diagram and artifact follow-up",
     "Mobile poster collapses; default edition initializes",
     "Three themes synchronize poster, palette and download edition",
-    "Concept and scenario substitution",
+    "Concise page without inputs, progress or correctness slogans; prompts use step-three concepts",
     "Copy and selection fallback",
-    "Progress count",
     "PNG/PDF/TXT download bytes and preview target",
-    "Download button follows selected edition",
-    "User text inserted literally"
+    "Download button follows selected edition"
   ],
-  "htmlBytes": 24769541
+  "htmlBytes": 24670202
 }

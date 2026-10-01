@@ -17,8 +17,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4884,
-      "sha256": "08246e3788062682ec4b7b8a71aefb197049a136a7ef679fc691802fb7bb9ccd"
+      "bytes": 4827,
+      "sha256": "611d30491f2e6f3dca311924e0fa207b434cfcb8914dcc4f1c8b1606be66ec4a"
     },
     {
       "path": "assets/fonts/BricolageGrotesque-Bold.ttf",
@@ -107,18 +107,18 @@
     },
     {
       "path": "content/campaign.json",
-      "bytes": 10543,
-      "sha256": "9e8b0ab4fa929a78b1fbde6245c2738864aab6ebe397d406ea5902b9c78f8eed"
+      "bytes": 9793,
+      "sha256": "20350f6797a3a3fcf567b9579a476490d9085733305ecfe095d4287942e36853"
     },
     {
       "path": "docs/editing.md",
-      "bytes": 2164,
-      "sha256": "fccfee4efc82abf11d351923948303e6beeafd6850d88388e540e25286f18aa6"
+      "bytes": 2125,
+      "sha256": "7c380bb0af0792ba61c61fcd1095df18b044790125e2dd9a83af1effc03dd32c"
     },
     {
       "path": "docs/embedded-materials.json",
       "bytes": 2467,
-      "sha256": "d8fb8c871e6507e924b8779470f97702d581357ebcfa146169ebc94dda2fb3e8"
+      "sha256": "e2abee04bc20ea88822fc4dddb17bcd6105b94396616c6ee36a5aa99afbf044c"
     },
     {
       "path": "docs/illustration-prompts.md",
@@ -127,78 +127,78 @@
     },
     {
       "path": "docs/provenance.md",
-      "bytes": 2695,
-      "sha256": "13a0860da576b54f0fef3e027ccaeb1aea1ced404aa5f03db9fb4e2ec0e2c1cc"
+      "bytes": 3424,
+      "sha256": "ddfdae438b65d53fa85638c6fea767a5273b839ffc1208e25e9e0b48709efaf6"
     },
     {
       "path": "docs/reproduction-check.json",
-      "bytes": 884,
-      "sha256": "fcabf8b9489f3679ba4c41475872bfdc963c5a797d34f29646884992e2b1c71c"
+      "bytes": 1062,
+      "sha256": "2fc026ee0da418409007be2f2b29248cc2d7b646a9b7d4f341a41d2d74ae1f97"
     },
     {
       "path": "docs/validation.json",
-      "bytes": 1328,
-      "sha256": "aab9ea0c4041fd00d9db33aa7ae8ce1ef3304e36134ee0948a40f58956ebbd63"
+      "bytes": 1330,
+      "sha256": "10f99d18a8c81541a15230f37f40def5524fd0e1f577fe1d4730d3d6ec1c78ee"
     },
     {
       "path": "index.html",
-      "bytes": 24769541,
-      "sha256": "5898cea42bad0efe798625cd6ba912ae507026c587e01821a84fd67994af48ef"
+      "bytes": 24670202,
+      "sha256": "5bc6bff4a077eab1c58ff16da84d1c4e03ce16ff0d916c825e364b49878d896c"
     },
     {
       "path": "materials/archive-campaign.pdf",
-      "bytes": 4616474,
-      "sha256": "18ca4313bcc4b7443aede1c9cd8f1d223d848a33e1a13eb7c93b94a399698a4b"
+      "bytes": 4610755,
+      "sha256": "2051cfda1aaf03ba7afa89a7d5e125540f5ff542aff3cb510190e1c3cb50052c"
     },
     {
       "path": "materials/archive-poster.png",
-      "bytes": 2011076,
-      "sha256": "48e04e2aacee2f223f69810d9aaa3fa8af30a8735c8332c2752e9c0fe235c897"
+      "bytes": 2008038,
+      "sha256": "c0d2512b9714fa1215308f13570785428b6da5f773251325a3cbb431f48a953b"
     },
     {
       "path": "materials/archive-task-card.png",
-      "bytes": 295743,
-      "sha256": "61d2b69465dd01cf14f17063715881c790c71c6677828f135105212aa76271eb"
+      "bytes": 281836,
+      "sha256": "de5590cccfec0d1d8ef44c3fdc96fc9ccfc8d84192f830670aa143cef661b0cd"
     },
     {
       "path": "materials/club-campaign.pdf",
-      "bytes": 3784875,
-      "sha256": "23a32cb670ac3fef40eff14ebd01617ae9411ca49d2d95aa39704a97cc3fd7c9"
+      "bytes": 3779177,
+      "sha256": "f2acf6fe8dc559f6a78d07fca40ebb658a83046868f6b5c0823ce2d054cc18ca"
     },
     {
       "path": "materials/club-poster.png",
-      "bytes": 1672686,
-      "sha256": "d6cbfbbbeba68270b3a06ad64f2b0477e301c10abc05ec79f40a92e692c8482e"
+      "bytes": 1668940,
+      "sha256": "8dd82c27475a4cca8188740546f0a6da63ba63e0a4e5802734f9677d32330559"
     },
     {
       "path": "materials/club-task-card.png",
-      "bytes": 297173,
-      "sha256": "c899f217653364e191c1c935aeba83d6fced04d8d61dccb1beeafe2e3029b24a"
+      "bytes": 283059,
+      "sha256": "49b4b8168aa7c5193e469dd74b646e3265064499ee26d49907f551f82bc8c86f"
     },
     {
       "path": "materials/night-campaign.pdf",
-      "bytes": 4008822,
-      "sha256": "be334907f400eb3cacae6b2532541befcb6eb97d7f9fec0537f36fdb3adb3eaf"
+      "bytes": 4003107,
+      "sha256": "fcf6d2b2487697a36b57d84b8c382c610cbfae0cf49dde5f344caeb614eb449b"
     },
     {
       "path": "materials/night-poster.png",
-      "bytes": 1571556,
-      "sha256": "bbac3cef7b477f00d635c2265d0e031039c5f73711da429b870ab392e2a491a9"
+      "bytes": 1566763,
+      "sha256": "a38dc3953e0e04041838daac9577b303676295a67a071daeaab2bf05bfd87a82"
     },
     {
       "path": "materials/night-task-card.png",
-      "bytes": 295594,
-      "sha256": "ac6915dc1add14e1c6209c8ff87d3a6b6fc552c6934c91aa769206701a9a9fc4"
+      "bytes": 281554,
+      "sha256": "ab24c1cedf4e1cf22814f709400ad38a24f2a7f6e1e7219ff027032a83565861"
     },
     {
       "path": "materials/提问句-定稿.txt",
-      "bytes": 991,
-      "sha256": "f6623629040b8737279e4c90dec55db9760d5f3bab6660c90bac333c7b9d4a68"
+      "bytes": 927,
+      "sha256": "a86600b6b8384d57e1d0e293df21af1b43d1f0cb80963f9dc91bd92b5e66c84f"
     },
     {
       "path": "materials/群公告-定稿.txt",
-      "bytes": 1676,
-      "sha256": "5ffffdaae73313cb5f50c3b40859684ba5bc837b86c93696124ff75379a140a0"
+      "bytes": 1366,
+      "sha256": "8c51b563cd16bb7e22ccd5b5e485253893ee5e66493b2c0a3670f1b584b87540"
     },
     {
       "path": "requirements.txt",
@@ -207,18 +207,18 @@
     },
     {
       "path": "src/build_html.py",
-      "bytes": 9392,
-      "sha256": "e21c9210764e3fe2186bd9ad90a3c286167de2d1d2ef408b5c1c24e6d0a3e956"
+      "bytes": 7983,
+      "sha256": "22281e9162a42956d79a02f8b11df27ed583e7f26c786e9a12056341afb330a9"
     },
     {
       "path": "src/campaign.css",
-      "bytes": 7043,
-      "sha256": "bd526ef271e0af97ac4e6b72adec37398eb7b08ef966f1f5c95dea3246e1fb05"
+      "bytes": 6009,
+      "sha256": "395f0acfaea5af22f6f747171a4293bf4feabad2f003b23e1c0ae1372a592db4"
     },
     {
       "path": "src/check-standalone.cjs",
-      "bytes": 7125,
-      "sha256": "c996d8e8665b60604bc95868f39340b79ec80515b285cfb4dc620e36c263a251"
+      "bytes": 6898,
+      "sha256": "5c02db9201fbbef4ea53c944d2bd130548d1c6c66f002b9c401cdc2870721558"
     },
     {
       "path": "src/derive_fonts.py",
@@ -227,13 +227,13 @@
     },
     {
       "path": "src/interactions.js",
-      "bytes": 3341,
-      "sha256": "0f43d22c4cbeff05f89c41165710e7e126038cc550142a681d256abb80d53c36"
+      "bytes": 2429,
+      "sha256": "ca1e4aa0f8db3990c3ce3bfa5a2886c29295ca742a3db8a29b171bbc96e385c3"
     },
     {
       "path": "src/layout.py",
-      "bytes": 5537,
-      "sha256": "573c5ff3075a10bd3f89d8c68acc58517391a23951c9492c0bd6bf8b2dab9953"
+      "bytes": 5242,
+      "sha256": "1095880699c8464c7f73bda0039d83ea07365bf2a5e2b1964bb7b273e616d3cc"
     },
     {
       "path": "src/rebuild.py",

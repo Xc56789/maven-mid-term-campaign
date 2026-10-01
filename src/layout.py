@@ -67,11 +67,7 @@ def poster(c,s):
     text(c,31,67,'概念侦探社',43,True,ink)
     text(c,33,130,s['headline'][0],25,True,ink)
     text(c,33,164,s['headline'][1],22 if night else 25,True,ink)
-    if night:
-        text(c,33,208,'六条线索，一桩小案。',12,fill=ink)
-        text(c,33,229,'答错也能结案。',12,fill=ink)
-    else:
-        text(c,33,197 if s['id']=='club' else 208,'六条线索，一桩小案。答错也能结案。',12,fill=ink)
+    text(c,33,197 if s['id']=='club' else 208,'六条线索，一桩小案。',12,fill=ink)
     box(c,20,564,500,139,panel,s['line'],r=10,alpha=.96)
     text(c,35,577,'查考试背景 / 对照概念试一题 / 连线索找案卷',13,True,s['ink'])
     for i,(a,b,gift) in enumerate(REWARDS):
@@ -89,8 +85,7 @@ def card(c,s):
     color(c,s['bg']);c.rect(0,0,W,H,stroke=0,fill=1)
     text(c,27,22,'MAVEN / 概念侦探社',17,True,s['ink'])
     text(c,27,57,'六条线索 · 任务卡',28,True,s['ink'])
-    text(c,28,98,'概念 A：________________    概念 B：________________',12,fill=s['muted'])
-    text(c,28,123,'先查清考试背景，再沿着概念线索走完这桩小案。',11,fill=s['muted'])
+    text(c,28,105,'先查清考试背景，再沿着概念线索走完这桩小案。',11,fill=s['muted'])
     for i,t in enumerate(TASKS):
         col=i%2;row=i//2;x=27+col*250;top=158+row*158;bw=236;bh=145
         box(c,x,top,bw,bh,s['panel'],s['line'],r=6 if s['id']=='archive' else 10)
@@ -103,6 +98,6 @@ def card(c,s):
         end=y+13+len(wrap(CARDTEXT[i][1],bw-26,9.1))*13
         assert end < top+bh-5,(s['id'],i,end,top+bh)
     text(c,28,646,'每项通过审核：每日抽奖 1 次 / 全部 6 项：额外参加结案抽奖',10.5,True,s['ink'])
-    text(c,28,674,'任意 1 项通过可领贴纸 ×1，限量先到先得。答错也算完成。',9,fill=s['muted'])
+    text(c,28,674,'任意 1 项通过可领贴纸 ×1，限量先到先得。',9,fill=s['muted'])
     text(c,28,695,'ask-maven.com  ·  考试安排以课程通知为准  ·  找不到课程请联系 TA',8.5,fill=s['muted'])
     c.showPage()

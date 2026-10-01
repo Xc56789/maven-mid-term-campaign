@@ -1,24 +1,29 @@
 {
-  "revision": "2026-10-02 task wording revision",
-  "method": "Current source rebuilt with installed Microsoft YaHei; independently copied checkout rebuilt using bundled OFL fonts and a previously prepared isolated Python virtual environment",
-  "html_sha256": "5898cea42bad0efe798625cd6ba912ae507026c587e01821a84fd67994af48ef",
+  "revision": "2026-10-02 copy simplification",
+  "method": "Current source rebuilt with installed Microsoft YaHei; independently copied source rebuilt with bundled OFL fonts using the existing isolated Python virtual environment",
+  "html_sha256": "5bc6bff4a077eab1c58ff16da84d1c4e03ce16ff0d916c825e364b49878d896c",
   "checks": [
     {
       "mode": "windows",
       "full_rebuild": "passed",
-      "interaction_and_download_checks": 22,
+      "interaction_and_download_checks": 20,
       "pdf_pages": 6
     },
     {
       "mode": "licensed",
-      "independent_copied_checkout_full_rebuild": "passed",
-      "interaction_and_download_checks": 22,
+      "full_rebuild": "passed",
+      "interaction_and_download_checks": 20,
       "pdf_pages": 6
     }
   ],
+  "content_checks": [
+    "No concept placeholders or answer-correctness slogans in 6 PDF pages",
+    "Gift inventory and drawing rules unchanged",
+    "Removed input and progress controls; theme switching, copy fallback and all 11 embedded downloads checked"
+  ],
   "limitations": [
-    "Node VM checks are not a real browser or phone test",
-    "Bundled OFL font mode differs in glyph shape from saved Microsoft YaHei materials",
-    "Rebuilt PDF bytes may differ with metadata or renderer"
+    "Node VM checks are not real browser or phone execution",
+    "OFL font mode has different glyph shapes",
+    "PDF bytes may vary with metadata and renderer"
   ]
 }
