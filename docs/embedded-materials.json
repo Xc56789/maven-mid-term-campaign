@@ -2,67 +2,67 @@
   "archive-poster": {
     "mime": "image/png",
     "filename": "Maven-概念侦探社-线索档案版-海报.png",
-    "sha256": "4aa198ca56baf43bc4f7f7dbc77c25229643b1fa3288257411aa8f4a09e7a75f",
-    "bytes": 2008060
+    "sha256": "48e04e2aacee2f223f69810d9aaa3fa8af30a8735c8332c2752e9c0fe235c897",
+    "bytes": 2011076
   },
   "archive-task-card": {
     "mime": "image/png",
     "filename": "Maven-概念侦探社-线索档案版-任务卡.png",
-    "sha256": "745660ba7310de59796bf837d3dcdaa0b8684b10612e3bba0cc3cbb0af7cbf99",
-    "bytes": 313144
+    "sha256": "61d2b69465dd01cf14f17063715881c790c71c6677828f135105212aa76271eb",
+    "bytes": 295743
   },
   "archive-campaign": {
     "mime": "application/pdf",
     "filename": "Maven-概念侦探社-线索档案版-海报与任务卡.pdf",
-    "sha256": "10f4a4b84775a4d27dbbbaf78a938469dd04b745bc057b1634a58836973aa774",
-    "bytes": 4622887
+    "sha256": "18ca4313bcc4b7443aede1c9cd8f1d223d848a33e1a13eb7c93b94a399698a4b",
+    "bytes": 4616474
   },
   "night-poster": {
     "mime": "image/png",
     "filename": "Maven-概念侦探社-夜间调查版-海报.png",
-    "sha256": "c6bbddc6854abc026b7ebf6916570e1763075d973e731660dba36ca845f83249",
-    "bytes": 1568449
+    "sha256": "bbac3cef7b477f00d635c2265d0e031039c5f73711da429b870ab392e2a491a9",
+    "bytes": 1571556
   },
   "night-task-card": {
     "mime": "image/png",
     "filename": "Maven-概念侦探社-夜间调查版-任务卡.png",
-    "sha256": "f281ef11306f2be617445e5293c760d66d438be7e1b51d6ea3d79f53fa28ba3b",
-    "bytes": 313192
+    "sha256": "ac6915dc1add14e1c6209c8ff87d3a6b6fc552c6934c91aa769206701a9a9fc4",
+    "bytes": 295594
   },
   "night-campaign": {
     "mime": "application/pdf",
     "filename": "Maven-概念侦探社-夜间调查版-海报与任务卡.pdf",
-    "sha256": "a66c0d16191f1941c958db60edbaf448590921fcd6751b1e089eafc4a6764fe6",
-    "bytes": 4015612
+    "sha256": "be334907f400eb3cacae6b2532541befcb6eb97d7f9fec0537f36fdb3adb3eaf",
+    "bytes": 4008822
   },
   "club-poster": {
     "mime": "image/png",
     "filename": "Maven-概念侦探社-校园社团版-海报.png",
-    "sha256": "a73afec8322058da93c0c8f2781bb9e43e0504dbd9ad4e19badadcec46a677e7",
-    "bytes": 1669730
+    "sha256": "d6cbfbbbeba68270b3a06ad64f2b0477e301c10abc05ec79f40a92e692c8482e",
+    "bytes": 1672686
   },
   "club-task-card": {
     "mime": "image/png",
     "filename": "Maven-概念侦探社-校园社团版-任务卡.png",
-    "sha256": "0bcddec4a0d0ee5d37788481293acb6039170a592f81a80e9f3974b07741ad09",
-    "bytes": 314287
+    "sha256": "c899f217653364e191c1c935aeba83d6fced04d8d61dccb1beeafe2e3029b24a",
+    "bytes": 297173
   },
   "club-campaign": {
     "mime": "application/pdf",
     "filename": "Maven-概念侦探社-校园社团版-海报与任务卡.pdf",
-    "sha256": "23bf30972b30e74e60c52c288c94a15b6620ce3f91e8bf9a283789f404c33dda",
-    "bytes": 3792763
+    "sha256": "23a32cb670ac3fef40eff14ebd01617ae9411ca49d2d95aa39704a97cc3fd7c9",
+    "bytes": 3784875
   },
   "notice": {
     "mime": "text/plain;charset=utf-8",
     "filename": "群公告-定稿.txt",
-    "sha256": "4c4be3a0f43d170f89b3082078ed30b5d162f22c4b1ce4c0b56c71b0e34a54a6",
-    "bytes": 1435
+    "sha256": "5ffffdaae73313cb5f50c3b40859684ba5bc837b86c93696124ff75379a140a0",
+    "bytes": 1676
   },
   "prompts": {
     "mime": "text/plain;charset=utf-8",
     "filename": "提问句-定稿.txt",
-    "sha256": "41790fad69bde5cbf8687f648e0c4659605a52d6474e03fdb499199f7a86a1ba",
-    "bytes": 1390
+    "sha256": "f6623629040b8737279e4c90dec55db9760d5f3bab6660c90bac333c7b9d4a68",
+    "bytes": 991
   }
 }

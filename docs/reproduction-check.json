@@ -1,25 +1,24 @@
 {
-  "method": "Independent copied checkout and newly created virtual environment; no originating campaign sibling directories",
-  "python": "3.12.14",
-  "exact_delivered_html_preserved": true,
-  "delivered_html_sha256": "435ebebc2a49ca9795dffde364bba3b2b15cac88b24f5aafebaea041d77326a1",
+  "revision": "2026-10-02 task wording revision",
+  "method": "Current source rebuilt with installed Microsoft YaHei; independently copied checkout rebuilt using bundled OFL fonts and a previously prepared isolated Python virtual environment",
+  "html_sha256": "5898cea42bad0efe798625cd6ba912ae507026c587e01821a84fd67994af48ef",
   "checks": [
     {
       "mode": "windows",
       "full_rebuild": "passed",
-      "interaction_and_download_checks": 21,
+      "interaction_and_download_checks": 22,
       "pdf_pages": 6
     },
     {
       "mode": "licensed",
-      "full_rebuild": "passed",
-      "interaction_and_download_checks": 21,
+      "independent_copied_checkout_full_rebuild": "passed",
+      "interaction_and_download_checks": 22,
       "pdf_pages": 6
     }
   ],
   "limitations": [
     "Node VM checks are not a real browser or phone test",
-    "OFL font mode intentionally differs in glyph shape from saved Microsoft YaHei materials",
-    "Rebuilt PDF byte hashes may vary with metadata and rendering environment"
+    "Bundled OFL font mode differs in glyph shape from saved Microsoft YaHei materials",
+    "Rebuilt PDF bytes may differ with metadata or renderer"
   ]
 }

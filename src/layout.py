@@ -39,7 +39,10 @@ def wrap(value,width,size,font='Chinese'):
     lines=[];part=''
     for ch in value:
         if ch=='\n':lines.append(part);part='';continue
-        if part and pdfmetrics.stringWidth(part+ch,font,size)>width:lines.append(part);part=ch
+        if part and pdfmetrics.stringWidth(part+ch,font,size)>width:
+            if ch in '，。；：！？、）】》」』':
+                lines.append(part[:-1]);part=part[-1]+ch
+            else:lines.append(part);part=ch
         else:part+=ch
     if part:lines.append(part)
     return lines
@@ -70,7 +73,7 @@ def poster(c,s):
     else:
         text(c,33,197 if s['id']=='club' else 208,'六条线索，一桩小案。答错也能结案。',12,fill=ink)
     box(c,20,564,500,139,panel,s['line'],r=10,alpha=.96)
-    text(c,35,577,'登录接微信 / 查课件试一题 / 看图谱留小图',13,True,s['ink'])
+    text(c,35,577,'查考试背景 / 对照概念试一题 / 连线索找案卷',13,True,s['ink'])
     for i,(a,b,gift) in enumerate(REWARDS):
         x=35+i*166
         text(c,x,602,a,9,fill=s['muted'])
@@ -87,7 +90,7 @@ def card(c,s):
     text(c,27,22,'MAVEN / 概念侦探社',17,True,s['ink'])
     text(c,27,57,'六条线索 · 任务卡',28,True,s['ink'])
     text(c,28,98,'概念 A：________________    概念 B：________________',12,fill=s['muted'])
-    text(c,28,123,'用同一对概念走完六步。先猜一下，再一起找依据。',11,fill=s['muted'])
+    text(c,28,123,'先查清考试背景，再沿着概念线索走完这桩小案。',11,fill=s['muted'])
     for i,t in enumerate(TASKS):
         col=i%2;row=i//2;x=27+col*250;top=158+row*158;bw=236;bh=145
         box(c,x,top,bw,bh,s['panel'],s['line'],r=6 if s['id']=='archive' else 10)
@@ -101,5 +104,5 @@ def card(c,s):
         assert end < top+bh-5,(s['id'],i,end,top+bh)
     text(c,28,646,'每项通过审核：每日抽奖 1 次 / 全部 6 项：额外参加结案抽奖',10.5,True,s['ink'])
     text(c,28,674,'任意 1 项通过可领贴纸 ×1，限量先到先得。答错也算完成。',9,fill=s['muted'])
-    text(c,28,695,'ask-maven.com  ·  配对码请勿分享  ·  找不到激活邮件或课程请联系 TA',8.5,fill=s['muted'])
+    text(c,28,695,'ask-maven.com  ·  考试安排以课程通知为准  ·  找不到课程请联系 TA',8.5,fill=s['muted'])
     c.showPage()

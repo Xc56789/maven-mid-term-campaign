@@ -107,8 +107,8 @@
     },
     {
       "path": "content/campaign.json",
-      "bytes": 10960,
-      "sha256": "43572bc3bb993280f691612618c7583de45dfd9a7b7e16b6e0584548b92552f2"
+      "bytes": 10543,
+      "sha256": "9e8b0ab4fa929a78b1fbde6245c2738864aab6ebe397d406ea5902b9c78f8eed"
     },
     {
       "path": "docs/editing.md",
@@ -117,8 +117,8 @@
     },
     {
       "path": "docs/embedded-materials.json",
-      "bytes": 2468,
-      "sha256": "84fec85ee71712ee458c44f449b385448a5153639af514cc01e49c2f5f7cf6a5"
+      "bytes": 2467,
+      "sha256": "d8fb8c871e6507e924b8779470f97702d581357ebcfa146169ebc94dda2fb3e8"
     },
     {
       "path": "docs/illustration-prompts.md",
@@ -127,78 +127,78 @@
     },
     {
       "path": "docs/provenance.md",
-      "bytes": 1907,
-      "sha256": "375de5c37ebfdef8a633df78d16349fa6ff4fd79b2161b0026d7f9bb5808e80f"
+      "bytes": 2695,
+      "sha256": "13a0860da576b54f0fef3e027ccaeb1aea1ced404aa5f03db9fb4e2ec0e2c1cc"
     },
     {
       "path": "docs/reproduction-check.json",
-      "bytes": 836,
-      "sha256": "72b665120c4b0b793451f4158763cf23552e20842c8b4cca8b97b70800569894"
+      "bytes": 884,
+      "sha256": "fcabf8b9489f3679ba4c41475872bfdc963c5a797d34f29646884992e2b1c71c"
     },
     {
       "path": "docs/validation.json",
-      "bytes": 1221,
-      "sha256": "4e10a2bac96f95393d1999d7842d9d76abd1871dae87c5e71e9608246a4633b6"
+      "bytes": 1328,
+      "sha256": "aab9ea0c4041fd00d9db33aa7ae8ce1ef3304e36134ee0948a40f58956ebbd63"
     },
     {
       "path": "index.html",
-      "bytes": 24856388,
-      "sha256": "435ebebc2a49ca9795dffde364bba3b2b15cac88b24f5aafebaea041d77326a1"
+      "bytes": 24769541,
+      "sha256": "5898cea42bad0efe798625cd6ba912ae507026c587e01821a84fd67994af48ef"
     },
     {
       "path": "materials/archive-campaign.pdf",
-      "bytes": 4622887,
-      "sha256": "10f4a4b84775a4d27dbbbaf78a938469dd04b745bc057b1634a58836973aa774"
+      "bytes": 4616474,
+      "sha256": "18ca4313bcc4b7443aede1c9cd8f1d223d848a33e1a13eb7c93b94a399698a4b"
     },
     {
       "path": "materials/archive-poster.png",
-      "bytes": 2008060,
-      "sha256": "4aa198ca56baf43bc4f7f7dbc77c25229643b1fa3288257411aa8f4a09e7a75f"
+      "bytes": 2011076,
+      "sha256": "48e04e2aacee2f223f69810d9aaa3fa8af30a8735c8332c2752e9c0fe235c897"
     },
     {
       "path": "materials/archive-task-card.png",
-      "bytes": 313144,
-      "sha256": "745660ba7310de59796bf837d3dcdaa0b8684b10612e3bba0cc3cbb0af7cbf99"
+      "bytes": 295743,
+      "sha256": "61d2b69465dd01cf14f17063715881c790c71c6677828f135105212aa76271eb"
     },
     {
       "path": "materials/club-campaign.pdf",
-      "bytes": 3792763,
-      "sha256": "23bf30972b30e74e60c52c288c94a15b6620ce3f91e8bf9a283789f404c33dda"
+      "bytes": 3784875,
+      "sha256": "23a32cb670ac3fef40eff14ebd01617ae9411ca49d2d95aa39704a97cc3fd7c9"
     },
     {
       "path": "materials/club-poster.png",
-      "bytes": 1669730,
-      "sha256": "a73afec8322058da93c0c8f2781bb9e43e0504dbd9ad4e19badadcec46a677e7"
+      "bytes": 1672686,
+      "sha256": "d6cbfbbbeba68270b3a06ad64f2b0477e301c10abc05ec79f40a92e692c8482e"
     },
     {
       "path": "materials/club-task-card.png",
-      "bytes": 314287,
-      "sha256": "0bcddec4a0d0ee5d37788481293acb6039170a592f81a80e9f3974b07741ad09"
+      "bytes": 297173,
+      "sha256": "c899f217653364e191c1c935aeba83d6fced04d8d61dccb1beeafe2e3029b24a"
     },
     {
       "path": "materials/night-campaign.pdf",
-      "bytes": 4015612,
-      "sha256": "a66c0d16191f1941c958db60edbaf448590921fcd6751b1e089eafc4a6764fe6"
+      "bytes": 4008822,
+      "sha256": "be334907f400eb3cacae6b2532541befcb6eb97d7f9fec0537f36fdb3adb3eaf"
     },
     {
       "path": "materials/night-poster.png",
-      "bytes": 1568449,
-      "sha256": "c6bbddc6854abc026b7ebf6916570e1763075d973e731660dba36ca845f83249"
+      "bytes": 1571556,
+      "sha256": "bbac3cef7b477f00d635c2265d0e031039c5f73711da429b870ab392e2a491a9"
     },
     {
       "path": "materials/night-task-card.png",
-      "bytes": 313192,
-      "sha256": "f281ef11306f2be617445e5293c760d66d438be7e1b51d6ea3d79f53fa28ba3b"
+      "bytes": 295594,
+      "sha256": "ac6915dc1add14e1c6209c8ff87d3a6b6fc552c6934c91aa769206701a9a9fc4"
     },
     {
       "path": "materials/提问句-定稿.txt",
-      "bytes": 1390,
-      "sha256": "41790fad69bde5cbf8687f648e0c4659605a52d6474e03fdb499199f7a86a1ba"
+      "bytes": 991,
+      "sha256": "f6623629040b8737279e4c90dec55db9760d5f3bab6660c90bac333c7b9d4a68"
     },
     {
       "path": "materials/群公告-定稿.txt",
-      "bytes": 1435,
-      "sha256": "4c4be3a0f43d170f89b3082078ed30b5d162f22c4b1ce4c0b56c71b0e34a54a6"
+      "bytes": 1676,
+      "sha256": "5ffffdaae73313cb5f50c3b40859684ba5bc837b86c93696124ff75379a140a0"
     },
     {
       "path": "requirements.txt",
@@ -207,8 +207,8 @@
     },
     {
       "path": "src/build_html.py",
-      "bytes": 9428,
-      "sha256": "cb61a026b32e31f0fe43019bfc1aba6c582ac518e8f1062d7473951f1b525e82"
+      "bytes": 9392,
+      "sha256": "e21c9210764e3fe2186bd9ad90a3c286167de2d1d2ef408b5c1c24e6d0a3e956"
     },
     {
       "path": "src/campaign.css",
@@ -217,8 +217,8 @@
     },
     {
       "path": "src/check-standalone.cjs",
-      "bytes": 6381,
-      "sha256": "dd38cedaf7d8d257de337b8e11f9333001338048740e03c22a78e572c76b5d31"
+      "bytes": 7125,
+      "sha256": "c996d8e8665b60604bc95868f39340b79ec80515b285cfb4dc620e36c263a251"
     },
     {
       "path": "src/derive_fonts.py",
@@ -228,12 +228,12 @@
     {
       "path": "src/interactions.js",
       "bytes": 3341,
-      "sha256": "24f726ce4dabdb7b3e99fe0daa361ba8dea60ed1a82f154822ce09acab672f0a"
+      "sha256": "0f43d22c4cbeff05f89c41165710e7e126038cc550142a681d256abb80d53c36"
     },
     {
       "path": "src/layout.py",
-      "bytes": 5404,
-      "sha256": "c18a9cf769adae9fd457296a3e2dc8c34561033e0d03d0c53d9cdd05b64cd496"
+      "bytes": 5537,
+      "sha256": "573c5ff3075a10bd3f89d8c68acc58517391a23951c9492c0bd6bf8b2dab9953"
     },
     {
       "path": "src/rebuild.py",
@@ -244,9 +244,5 @@
   "excludes": [
     "docs/file-manifest.json"
   ],
-  "checks": [
-    "allowlisted campaign files only",
-    "no common credential signatures or originating absolute workspace paths",
-    "exact existing HTML and material bytes preserved in Git"
-  ]
+  "hash_scope": "Git index blob bytes, including intentional binary and delivered standalone preservation; text files are normalized by Git attributes"
 }
