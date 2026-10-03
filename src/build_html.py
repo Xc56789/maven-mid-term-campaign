@@ -1,548 +1,939 @@
-from pathlib import Path
-import json
-import base64
-import hashlib
+from __future__ import annotations
+
 import html
-import layout as campaign
+import json
+from pathlib import Path
 
 
-REPO = Path(__file__).resolve().parent.parent
-ROOT = REPO / "materials"
-ROOT.mkdir(exist_ok=True)
+ROOT = Path(__file__).resolve().parents[1]
+CONTENT_DIR = ROOT / "content"
+SRC_DIR = ROOT / "src"
+DOCS_DIR = ROOT / "docs"
 
-DATA = json.loads(
-    (REPO / "content" / "campaign.json").read_text(encoding="utf-8")
-)
-
-for attribute, key in [
-    ("TITLE", "title"),
-    ("TASKS", "tasks"),
-    ("STYLES", "styles"),
-    ("REWARDS", "poster_rewards"),
-    ("CARDTEXT", "card_text"),
-]:
-    setattr(campaign, attribute, DATA[key])
-
-GIFTS = DATA["gifts"]
-ANNOUNCEMENT = DATA["announcement"]
-
-CSS = (REPO / "src" / "campaign.css").read_text(encoding="utf-8")
-JS = (REPO / "src" / "interactions.js").read_text(encoding="utf-8")
+CAMPAIGN_FILE = CONTENT_DIR / "campaign.json"
+OUTPUT_FILE = ROOT / "index.html"
+EMBEDDED_FILE = DOCS_DIR / "embedded-materials.json"
 
 
-def file_asset(path, mime, filename=None):
-    raw = path.read_bytes()
-
-    return {
-        "mime": mime,
-        "filename": filename or path.name,
-        "base64": base64.b64encode(raw).decode(),
-        "sha256": hashlib.sha256(raw).hexdigest(),
-        "bytes": len(raw),
-    }
+def load_campaign() -> dict:
+    with CAMPAIGN_FILE.open("r", encoding="utf-8") as f:
+        return json.load(f)
 
 
-def build_html():
-    assets = {}
+def esc(value) -> str:
+    return html.escape(str(value), quote=True)
 
-    # 目前页面只显示「线索档案版」
-    # 但仓库中的其他版本素材仍然保留
-    for style in campaign.STYLES:
-        for kind, ext, mime in [
-            ("poster", "png", "image/png"),
-            ("task-card", "png", "image/png"),
-            ("campaign", "pdf", "application/pdf"),
-        ]:
-            assets[f"{style['id']}-{kind}"] = file_asset(
-                ROOT / f"{style['id']}-{kind}.{ext}",
-                mime,
-                "Maven-概念侦探社-"
-                + style["name"]
-                + "-"
-                + {
-                    "poster": "海报",
-                    "task-card": "任务卡",
-                    "campaign": "海报与任务卡",
-                }[kind]
-                + f".{ext}",
-            )
 
-    # 群公告
-    (ROOT / "群公告-定稿.txt").write_text(
-        ANNOUNCEMENT,
-        encoding="utf-8-sig",
-    )
+def render_styles(campaign: dict) -> str:
+    styles = campaign.get("styles", [])
 
-    # 提问句
-    promptdoc = (
-        "Maven 概念侦探社｜提问句\n\n"
-        + "\n\n".join(
-            f"{task['n']:02} {task['title']}\n"
-            + "\n\n".join(
-                task[key]
-                for key in ["prompt", "extra"]
-                if task.get(key)
-            )
-            for task in campaign.TASKS
-            if task.get("prompt")
-        )
-    )
+    if not styles:
+        return ""
 
-    (ROOT / "提问句-定稿.txt").write_text(
-        promptdoc,
-        encoding="utf-8-sig",
-    )
+    cards = []
 
-    assets["notice"] = file_asset(
-        ROOT / "群公告-定稿.txt",
-        "text/plain;charset=utf-8",
-    )
+    for style in styles:
+        style_id = esc(style.get("id", ""))
+        name = esc(style.get("name", ""))
+        description = esc(style.get("description", ""))
 
-    assets["prompts"] = file_asset(
-        ROOT / "提问句-定稿.txt",
-        "text/plain;charset=utf-8",
-    )
-
-    prompts = {}
-    steps = []
-
-    for task in campaign.TASKS:
-        extra = ""
-
-        for key in ["prompt", "extra"]:
-            if task.get(key):
-                prompt_id = f"p{task['n']}-{key}"
-                prompts[prompt_id] = task[key]
-
-                extra += (
-                    '<div class="promptbox">'
-                    f'<p id="{prompt_id}" data-prompt="{prompt_id}">'
-                    f"{html.escape(task[key])}"
-                    "</p>"
-                    f'<button class="copy" type="button" '
-                    f'data-copy="{prompt_id}">复制这句</button>'
-                    "</div>"
-                )
-
-        steps.append(
+        cards.append(
             f"""
-            <details class="step" {"open" if task["n"] == 1 else ""}>
-                <summary>
-                    <span class="number">{task["n"]:02}</span>
-                    <span>
-                        <span class="steptitle">{task["title"]}</span>
-                        <span class="short">{task["short"]}</span>
-                    </span>
-                </summary>
-
-                <div class="stepbody">
-                    <span class="channel">{task["channel"]}</span>
-                    <p>{task["body"]}</p>
-                    <p class="help">{task["help"]}</p>
-                    {extra}
-                    <p class="done">完成：{task["done"]}</p>
-                </div>
-            </details>
+            <article class="style-card" data-style="{style_id}">
+                <div class="style-card-label">CASE STYLE</div>
+                <h3>{name}</h3>
+                <p>{description}</p>
+            </article>
             """
         )
 
-    # 当前页面只使用 archive
-    archive = next(
-        style
-        for style in campaign.STYLES
-        if style["id"] == "archive"
-    )
+    return f"""
+    <section class="section style-section">
+        <div class="section-label">01 / CASE FILE</div>
+        <h2>线索档案</h2>
+        <div class="style-grid">
+            {''.join(cards)}
+        </div>
+    </section>
+    """
 
-    variants = {
-        "archive": {
-            "name": archive["name"],
-            "colors": {
-                "bg": archive["bg"],
-                "ink": archive["ink"],
-                "muted": archive["muted"],
-                "accent": archive["accent"],
-                "line": archive["line"],
-                "panel": archive["panel"],
-                "secondary": archive["secondary"],
-                "buttonink": "#ffffff",
-            },
-        }
-    }
 
-    initial = ";".join(
-        f"--{key}:{value}"
-        for key, value in variants["archive"]["colors"].items()
-    )
+def render_announcement(campaign: dict) -> str:
+    announcement = campaign.get("announcement", {})
 
-    # 礼物
-    gifts = ""
+    title = esc(announcement.get("title", "Maven Mid-Term Campaign"))
+    subtitle = esc(announcement.get("subtitle", ""))
+    intro = esc(announcement.get("intro", ""))
 
-    for group in ["每日随机礼", "结案大奖"]:
-        rows = "".join(
-            f'<li><span>{gift["name"]}</span></li>'
-            for gift in GIFTS
-            if gift["group"] == group
+    items = announcement.get("items", [])
+
+    item_html = []
+
+    for index, item in enumerate(items, start=1):
+        if isinstance(item, dict):
+            item_title = esc(item.get("title", ""))
+            item_description = esc(item.get("description", ""))
+        else:
+            item_title = esc(item)
+            item_description = ""
+
+        item_html.append(
+            f"""
+            <article class="announcement-item">
+                <div class="announcement-number">
+                    {index:02d}
+                </div>
+                <div>
+                    <h3>{item_title}</h3>
+                    <p>{item_description}</p>
+                </div>
+            </article>
+            """
         )
 
-        if group == "每日随机礼":
-            description = "每通过一项，增加一次每日抽奖机会。"
+    return f"""
+    <section class="section">
+        <div class="section-label">02 / INVESTIGATION BRIEF</div>
+
+        <div class="section-heading">
+            <div>
+                <h2>{title}</h2>
+                <div class="section-subtitle">{subtitle}</div>
+            </div>
+        </div>
+
+        <p class="section-intro">{intro}</p>
+
+        <div class="announcement-list">
+            {''.join(item_html)}
+        </div>
+    </section>
+    """
+
+
+def render_rules(campaign: dict) -> str:
+    rules = campaign.get("rules", [])
+
+    rule_html = []
+
+    for index, rule in enumerate(rules, start=1):
+        rule_html.append(
+            f"""
+            <div class="rule-item">
+                <span class="rule-number">{index:02d}</span>
+                <span>{esc(rule)}</span>
+            </div>
+            """
+        )
+
+    return f"""
+    <section class="section">
+        <div class="section-label">03 / CASE RULES</div>
+        <h2>案件规则</h2>
+
+        <div class="rules">
+            {''.join(rule_html)}
+        </div>
+    </section>
+    """
+
+
+def render_tasks(campaign: dict) -> str:
+    tasks = campaign.get("tasks", [])
+
+    task_html = []
+
+    for index, task in enumerate(tasks, start=1):
+        title = esc(task.get("title", ""))
+        description = esc(task.get("description", ""))
+        detail = task.get("detail", [])
+
+        detail_html = []
+
+        for line in detail:
+            detail_html.append(
+                f"<li>{esc(line)}</li>"
+            )
+
+        task_html.append(
+            f"""
+            <article class="task-card">
+                <div class="task-top">
+                    <div class="task-number">TASK {index:02d}</div>
+                    <div class="task-status">CASE CLUE</div>
+                </div>
+
+                <h3>{title}</h3>
+
+                <p class="task-description">
+                    {description}
+                </p>
+
+                <ul class="task-detail">
+                    {''.join(detail_html)}
+                </ul>
+            </article>
+            """
+        )
+
+    return f"""
+    <section class="section">
+        <div class="section-label">04 / SIX CLUES</div>
+        <h2>六条线索</h2>
+
+        <div class="task-grid">
+            {''.join(task_html)}
+        </div>
+    </section>
+    """
+
+
+def render_rewards(campaign: dict) -> str:
+    rewards = campaign.get("poster_rewards", [])
+
+    reward_html = []
+
+    for reward in rewards:
+        if isinstance(reward, list):
+            parts = [esc(x) for x in reward]
+        elif isinstance(reward, dict):
+            parts = [
+                esc(reward.get("condition", "")),
+                esc(reward.get("reward", "")),
+                esc(reward.get("description", "")),
+            ]
         else:
-            description = "六项全部完成，额外参加大奖抽奖。"
+            parts = [esc(reward)]
 
-        gifts += f"""
-        <article class="giftgroup">
-            <h3>{group}</h3>
-            <p>{description}</p>
-            <ul>{rows}</ul>
-        </article>
-        """
+        reward_html.append(
+            f"""
+            <article class="reward-card">
+                <div class="reward-main">
+                    {''.join(f'<div>{part}</div>' for part in parts)}
+                </div>
+            </article>
+            """
+        )
 
-    def dump(value):
-        return json.dumps(
-            value,
-            ensure_ascii=False,
-            separators=(",", ":"),
-        ).replace("<", "\\u003c")
+    gifts = campaign.get("gifts", {})
 
-    page = f"""<!doctype html>
+    daily_gifts = gifts.get("daily", [])
+    grand_gifts = gifts.get("grand", [])
+
+    daily_html = []
+
+    for gift in daily_gifts:
+        if isinstance(gift, dict):
+            name = gift.get("name", "")
+        else:
+            name = gift
+
+        daily_html.append(
+            f"""
+            <div class="gift-item">
+                <span>✦</span>
+                <span>{esc(name)}</span>
+            </div>
+            """
+        )
+
+    grand_html = []
+
+    for gift in grand_gifts:
+        if isinstance(gift, dict):
+            name = gift.get("name", "")
+        else:
+            name = gift
+
+        grand_html.append(
+            f"""
+            <div class="gift-item">
+                <span>✦</span>
+                <span>{esc(name)}</span>
+            </div>
+            """
+        )
+
+    return f"""
+    <section class="section">
+        <div class="section-label">05 / REWARD RECORD</div>
+        <h2>奖励记录</h2>
+
+        <div class="reward-grid">
+            {''.join(reward_html)}
+        </div>
+
+        <div class="gift-columns">
+            <div class="gift-box">
+                <div class="gift-label">DAILY RANDOM GIFTS</div>
+                <h3>每日随机礼</h3>
+                <div class="gift-list">
+                    {''.join(daily_html)}
+                </div>
+            </div>
+
+            <div class="gift-box">
+                <div class="gift-label">FINAL CASE PRIZES</div>
+                <h3>结案大奖</h3>
+                <div class="gift-list">
+                    {''.join(grand_html)}
+                </div>
+            </div>
+        </div>
+    </section>
+    """
+
+
+def render_my_case() -> str:
+    return """
+    <section class="my-case-entry">
+        <div class="my-case-content">
+            <div class="my-case-label">CASE FILE / MY CASE</div>
+
+            <h2>我的案件</h2>
+
+            <p>
+                登录你的学校邮箱，提交任务截图，
+                查看审核状态，并领取对应的抽奖机会。
+            </p>
+
+            <a class="primary-button" href="src/my_case.html">
+                进入我的案件 →
+            </a>
+        </div>
+
+        <div class="my-case-stamp">
+            STUDENT<br />
+            CASE FILE
+        </div>
+    </section>
+    """
+
+
+def render_footer() -> str:
+    return """
+    <footer class="footer">
+        <div>MAVEN · MARKETING AI VIRTUAL ENGINE</div>
+        <div>CASE CLOSED? NOT YET.</div>
+    </footer>
+    """
+
+
+def build_html(campaign: dict) -> str:
+    styles_html = render_styles(campaign)
+    announcement_html = render_announcement(campaign)
+    rules_html = render_rules(campaign)
+    tasks_html = render_tasks(campaign)
+    rewards_html = render_rewards(campaign)
+    my_case_html = render_my_case()
+    footer_html = render_footer()
+
+    title = esc(
+        campaign.get(
+            "title",
+            "Maven Mid-Term Campaign"
+        )
+    )
+
+    subtitle = esc(
+        campaign.get(
+            "subtitle",
+            "Marketing AI Virtual Engine"
+        )
+    )
+
+    return f"""<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="light dark">
+    <meta charset="UTF-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    />
 
-<meta
-    name="description"
-    content="Maven 概念侦探社：查考试安排、比较概念、做小测、画关系图。"
->
+    <title>{title}</title>
 
-<title>Maven 概念侦探社</title>
+    <style>
+        :root {{
+            --paper: #f0f2ed;
+            --ink: #24342f;
+            --green: #264e3e;
+            --green-light: #dfe7df;
+            --line: #8d9a91;
+            --muted: #68736d;
+            --white: #ffffff;
+        }}
 
-<style>
-:root {{
-    {initial}
-}}
+        * {{
+            box-sizing: border-box;
+        }}
 
-{CSS}
-</style>
+        html {{
+            scroll-behavior: smooth;
+        }}
+
+        body {{
+            margin: 0;
+            color: var(--ink);
+            background:
+                linear-gradient(
+                    rgba(38, 78, 62, 0.035) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(38, 78, 62, 0.035) 1px,
+                    transparent 1px
+                ),
+                var(--paper);
+            background-size: 24px 24px;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                "PingFang SC",
+                "Microsoft YaHei",
+                sans-serif;
+        }}
+
+        a {{
+            color: inherit;
+        }}
+
+        .page {{
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+        }}
+
+        .hero {{
+            min-height: 78vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 80px 0;
+        }}
+
+        .hero-inner {{
+            width: 100%;
+            position: relative;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.82);
+            padding: clamp(30px, 7vw, 80px);
+        }}
+
+        .hero-inner::before {{
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 7px;
+            background: var(--green);
+        }}
+
+        .hero-label {{
+            color: var(--muted);
+            font-family: Georgia, serif;
+            letter-spacing: 0.18em;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }}
+
+        .hero h1 {{
+            margin: 0;
+            max-width: 900px;
+            color: var(--green);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(52px, 10vw, 120px);
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+        }}
+
+        .hero-subtitle {{
+            margin-top: 24px;
+            color: var(--muted);
+            font-size: 15px;
+            letter-spacing: 0.08em;
+        }}
+
+        .hero-description {{
+            max-width: 680px;
+            margin-top: 28px;
+            color: var(--ink);
+            font-size: 16px;
+            line-height: 1.9;
+        }}
+
+        .hero-stamp {{
+            position: absolute;
+            right: 34px;
+            top: 34px;
+            border: 2px solid var(--green);
+            color: var(--green);
+            padding: 10px 14px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            transform: rotate(-5deg);
+        }}
+
+        .hero-button-row {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }}
+
+        .primary-button {{
+            display: inline-block;
+            padding: 13px 20px;
+            background: var(--green);
+            border: 1px solid var(--green);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }}
+
+        .primary-button:hover {{
+            opacity: 0.9;
+        }}
+
+        .section {{
+            padding: 80px 0;
+            border-top: 1px dashed var(--line);
+        }}
+
+        .section-label {{
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            margin-bottom: 12px;
+        }}
+
+        .section h2 {{
+            margin: 0 0 24px;
+            color: var(--green);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(34px, 6vw, 58px);
+            line-height: 1;
+        }}
+
+        .section-subtitle {{
+            color: var(--muted);
+            font-size: 14px;
+        }}
+
+        .section-intro {{
+            max-width: 760px;
+            color: var(--muted);
+            line-height: 1.9;
+        }}
+
+        .style-grid {{
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }}
+
+        .style-card {{
+            padding: 24px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.7);
+        }}
+
+        .style-card-label {{
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            margin-bottom: 10px;
+        }}
+
+        .style-card h3 {{
+            margin: 0 0 8px;
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: 28px;
+        }}
+
+        .style-card p {{
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }}
+
+        .announcement-list {{
+            border-top: 1px solid var(--line);
+        }}
+
+        .announcement-item {{
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 20px;
+            padding: 22px 0;
+            border-bottom: 1px solid var(--line);
+        }}
+
+        .announcement-number {{
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: 25px;
+            font-weight: 700;
+        }}
+
+        .announcement-item h3 {{
+            margin: 0 0 7px;
+            font-size: 18px;
+        }}
+
+        .announcement-item p {{
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }}
+
+        .rules {{
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.72);
+        }}
+
+        .rule-item {{
+            display: flex;
+            gap: 18px;
+            padding: 20px;
+            border-bottom: 1px dashed var(--line);
+            line-height: 1.7;
+        }}
+
+        .rule-item:last-child {{
+            border-bottom: 0;
+        }}
+
+        .rule-number {{
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-weight: 700;
+            flex-shrink: 0;
+        }}
+
+        .task-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }}
+
+        .task-card {{
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.78);
+            padding: 25px;
+            min-height: 260px;
+        }}
+
+        .task-top {{
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
+        }}
+
+        .task-number {{
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-weight: 700;
+        }}
+
+        .task-status {{
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+        }}
+
+        .task-card h3 {{
+            margin: 0 0 12px;
+            font-size: 21px;
+        }}
+
+        .task-description {{
+            color: var(--muted);
+            line-height: 1.7;
+        }}
+
+        .task-detail {{
+            margin: 18px 0 0;
+            padding-left: 20px;
+            color: var(--ink);
+            line-height: 1.8;
+            font-size: 13px;
+        }}
+
+        .reward-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }}
+
+        .reward-card {{
+            border: 1px solid var(--green);
+            background: var(--green-light);
+            padding: 22px;
+        }}
+
+        .reward-main {{
+            display: grid;
+            gap: 5px;
+            line-height: 1.6;
+        }}
+
+        .reward-main div:first-child {{
+            font-weight: 700;
+        }}
+
+        .gift-columns {{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }}
+
+        .gift-box {{
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.72);
+            padding: 24px;
+        }}
+
+        .gift-label {{
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            margin-bottom: 8px;
+        }}
+
+        .gift-box h3 {{
+            margin: 0 0 18px;
+            color: var(--green);
+            font-family: Georgia, serif;
+            font-size: 28px;
+        }}
+
+        .gift-list {{
+            display: grid;
+            gap: 10px;
+        }}
+
+        .gift-item {{
+            display: flex;
+            gap: 10px;
+            line-height: 1.6;
+        }}
+
+        .gift-item span:first-child {{
+            color: var(--green);
+        }}
+
+        .my-case-entry {{
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+            margin: 30px 0 80px;
+            padding: 36px;
+            border: 2px solid var(--green);
+            background: var(--green);
+            color: white;
+            overflow: hidden;
+        }}
+
+        .my-case-content {{
+            max-width: 700px;
+        }}
+
+        .my-case-label {{
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            opacity: 0.75;
+            margin-bottom: 10px;
+        }}
+
+        .my-case-entry h2 {{
+            margin: 0 0 12px;
+            font-family: Georgia, serif;
+            font-size: 42px;
+        }}
+
+        .my-case-entry p {{
+            margin: 0 0 22px;
+            line-height: 1.8;
+            opacity: 0.86;
+        }}
+
+        .my-case-entry .primary-button {{
+            background: var(--paper);
+            color: var(--green);
+            border-color: var(--paper);
+        }}
+
+        .my-case-stamp {{
+            flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.7);
+            padding: 13px 16px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-align: center;
+            transform: rotate(5deg);
+        }}
+
+        .footer {{
+            padding: 28px 0 45px;
+            border-top: 1px dashed var(--line);
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+        }}
+
+        @media (max-width: 720px) {{
+            .page {{
+                width: min(100% - 20px, 1120px);
+            }}
+
+            .hero {{
+                min-height: auto;
+                padding: 35px 0 50px;
+            }}
+
+            .hero-inner {{
+                padding: 30px 22px;
+            }}
+
+            .hero-stamp {{
+                position: static;
+                display: inline-block;
+                margin-bottom: 25px;
+            }}
+
+            .task-grid,
+            .reward-grid,
+            .gift-columns {{
+                grid-template-columns: 1fr;
+            }}
+
+            .announcement-item {{
+                grid-template-columns: 50px 1fr;
+            }}
+
+            .my-case-entry {{
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 50px;
+                padding: 25px;
+            }}
+
+            .footer {{
+                flex-direction: column;
+            }}
+        }}
+    </style>
 </head>
 
 <body>
 
-<header>
-    <a class="brand" href="#top">Maven 概念侦探社</a>
+    <main class="page">
 
-    <nav aria-label="页面导航">
-        <a href="#clues">任务</a>
-        <a href="#gifts">礼物</a>
-        <a href="#my-case">我的案件</a>
-        <a href="#downloads">下载</a>
-    </nav>
-</header>
+        <section class="hero">
+            <div class="hero-inner">
 
+                <div class="hero-stamp">
+                    CASE FILE<br />
+                    MID-TERM
+                </div>
 
-<main id="top">
+                <div class="hero-label">
+                    MAVEN / MARKETING AI VIRTUAL ENGINE
+                </div>
 
-<section class="hero">
+                <h1>{title}</h1>
 
-    <div>
-        <p class="audience">
-            香港中文大学（深圳） · 营销课程期中复习
-        </p>
+                <div class="hero-subtitle">
+                    {subtitle}
+                </div>
 
-        <h1>概念侦探社</h1>
+                <p class="hero-description">
+                    一场围绕 Maven 的校园中期任务行动。
+                    从课程线索开始，逐步完成六项任务，
+                    留下你的证据，等待案件审核。
+                </p>
 
-        <a class="primary" href="#clues">
-            接下这桩小案
-        </a>
+                <div class="hero-button-row">
+                    <a
+                        class="primary-button"
+                        href="src/my_case.html"
+                    >
+                        进入我的案件 →
+                    </a>
+                </div>
 
-        <p class="note">
-            用自己的学校账号参加，已有账号直接登录。
-        </p>
-    </div>
+            </div>
+        </section>
 
+        {styles_html}
 
-    <details class="poster" id="poster" open>
+        {announcement_html}
 
-        <summary>
-            查看活动海报
-        </summary>
+        {rules_html}
 
-        <img
-            id="poster-image"
-            alt="Maven 概念侦探社活动海报"
-            width="1080"
-            height="1440"
-        >
+        {tasks_html}
 
-    </details>
+        {rewards_html}
 
-</section>
+        {my_case_html}
 
+        {footer_html}
 
-<section
-    class="rewardstrip"
-    aria-label="参与奖励"
->
-
-    <div>
-        <small>每一项通过审核</small>
-        <strong>每日抽奖机会 +1</strong>
-    </div>
-
-    <div>
-        <small>六项全部完成</small>
-        <strong>额外参加大奖抽奖</strong>
-    </div>
-
-</section>
-
-
-<section id="clues">
-
-    <div class="tasks">
-        {"".join(steps)}
-    </div>
-
-</section>
-
-
-<section class="case-entry" id="my-case">
-
-    <div class="case-entry-content">
-
-        <p class="audience">
-            CASE FILE / MY CASE
-        </p>
-
-        <h2>我的案件</h2>
-
-        <p>
-            完成任务后，提交学习结果截图。
-            审核通过后，即可获得每日抽奖机会。
-        </p>
-
-        <p class="note">
-            使用学校邮箱登录，查看任务审核状态与抽奖资格。
-        </p>
-
-    </div>
-
-    <a class="primary" href="#my-case">
-        进入我的案件
-    </a>
-
-</section>
-
-
-<section class="gifts" id="gifts">
-
-    <h2>查线索，也有小礼物</h2>
-
-    <div class="giftgroups">
-        {gifts}
-    </div>
-
-
-    <ul class="rules">
-
-        <li>
-            每完成一项并通过审核，获得一次每日抽奖机会；
-            同一任务每人只计一次。
-        </li>
-
-        <li>
-            每天随机开奖，不用自己选礼物。
-            六项全部完成，额外参加大奖抽奖。
-        </li>
-
-        <li>
-            保存学习结果截图，按课程群通知提交与核验。
-            请勿提交密码、二维码或微信配对码。
-        </li>
-
-    </ul>
-
-</section>
-
-
-<section class="downloads" id="downloads">
-
-    <h2>把这份小案卷带走</h2>
-
-    <p class="note">
-        当前：<strong id="download-edition">线索档案版</strong>。
-    </p>
-
-
-    <div class="downloadbuttons">
-
-        <button
-            class="secondary"
-            data-download="poster"
-            type="button"
-        >
-            下载海报 PNG
-        </button>
-
-
-        <button
-            class="secondary"
-            data-download="task-card"
-            type="button"
-        >
-            下载任务卡 PNG
-        </button>
-
-
-        <button
-            class="secondary"
-            data-download="campaign"
-            type="button"
-        >
-            下载海报与任务卡 PDF
-        </button>
-
-
-        <button
-            class="secondary"
-            data-download="poster"
-            data-preview="true"
-            type="button"
-        >
-            查看／保存海报
-        </button>
-
-
-        <button
-            class="secondary"
-            data-download="notice"
-            type="button"
-        >
-            下载群公告文案
-        </button>
-
-
-        <button
-            class="secondary"
-            data-download="prompts"
-            type="button"
-        >
-            下载提问句
-        </button>
-
-    </div>
-
-
-    <p
-        id="download-status"
-        class="downloadstatus"
-        role="status"
-        aria-live="polite"
-    ></p>
-
-
-    <p class="note">
-        所有材料都在这一个文件里，无需其他附件。
-        微信内若不能打开或下载，请先保存文件，再用浏览器打开。
-    </p>
-
-</section>
-
-
-<section class="closing">
-
-    <a
-        class="primary"
-        href="https://ask-maven.com/"
-        target="_blank"
-        rel="noopener"
-    >
-        去 Maven 开始
-    </a>
-
-</section>
-
-</main>
-
-
-<footer>
-    Missing course files? Please contact your TA.<br>
-    活动时间、任务提交、开奖与领取安排见课程群通知。
-</footer>
-
-
-<noscript>
-    <p style="padding:20px">
-        请使用支持 JavaScript 的浏览器打开，
-        以显示海报、复制提问句和下载内置材料。
-        任务与活动规则可直接阅读。
-    </p>
-</noscript>
-
-
-<script type="application/json" id="material-data">
-    {dump(assets)}
-</script>
-
-
-<script type="application/json" id="variant-data">
-    {dump(variants)}
-</script>
-
-
-<script type="application/json" id="prompt-data">
-    {dump(prompts)}
-</script>
-
-
-<script>
-{JS}
-</script>
+    </main>
 
 </body>
 </html>
 """
 
-    output = REPO / "index.html"
 
-    output.write_text(
-        page,
-        encoding="utf-8",
-    )
-
-    manifest = {
-        key: {
-            item_key: item_value
-            for item_key, item_value in value.items()
-            if item_key != "base64"
-        }
-        for key, value in assets.items()
+def build_embedded_materials(campaign: dict) -> dict:
+    return {
+        "styles": campaign.get("styles", []),
+        "tasks": campaign.get("tasks", []),
+        "rules": campaign.get("rules", []),
+        "poster_rewards": campaign.get("poster_rewards", []),
+        "gifts": campaign.get("gifts", {}),
     }
 
-    docs = REPO / "docs"
-    docs.mkdir(exist_ok=True)
 
-    (docs / "embedded-materials.json").write_text(
+def main() -> None:
+    campaign = load_campaign()
+
+    OUTPUT_FILE.write_text(
+        build_html(campaign),
+        encoding="utf-8"
+    )
+
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+
+    EMBEDDED_FILE.write_text(
         json.dumps(
-            manifest,
+            build_embedded_materials(campaign),
             ensure_ascii=False,
-            indent=2,
+            indent=2
         ),
-        encoding="utf-8",
+        encoding="utf-8"
     )
 
-    print(
-        "Standalone HTML bytes:",
-        output.stat().st_size,
-    )
-
-    print(
-        "Embedded downloads:",
-        len(assets),
-    )
+    print(f"Built: {OUTPUT_FILE}")
+    print(f"Built: {EMBEDDED_FILE}")
 
 
 if __name__ == "__main__":
-    build_html()
+    main()
