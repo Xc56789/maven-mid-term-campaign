@@ -414,10 +414,6 @@
 
 <body>
 
-  <!-- =====================================================
-       登录页面
-  ====================================================== -->
-
   <main id="loginView" class="page hidden">
 
     <section class="panel login-box">
@@ -473,10 +469,6 @@
   </main>
 
 
-  <!-- =====================================================
-       管理员后台
-  ====================================================== -->
-
   <main id="adminView" class="page hidden">
 
     <header class="header">
@@ -505,10 +497,6 @@
 
     </header>
 
-
-    <!-- ===================================================
-         数据统计
-    ==================================================== -->
 
     <section class="stats">
 
@@ -545,10 +533,6 @@
     </section>
 
 
-    <!-- ===================================================
-         审核列表
-    ==================================================== -->
-
     <section class="panel">
 
       <h2 class="panel-title">
@@ -574,10 +558,6 @@
 
   </main>
 
-
-  <!-- =====================================================
-       Supabase
-  ====================================================== -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -617,10 +597,6 @@
       SUPABASE_KEY
     );
 
-
-    /* =====================================================
-       DOM
-    ====================================================== */
 
     const loginView =
       document.getElementById("loginView");
@@ -670,10 +646,6 @@
     const rejectedCount =
       document.getElementById("rejectedCount");
 
-
-    /* =====================================================
-       工具函数
-    ====================================================== */
 
     function show(element) {
       element.classList.remove("hidden");
@@ -738,10 +710,6 @@
     }
 
 
-    /* =====================================================
-       页面状态
-    ====================================================== */
-
     function showLogin() {
       show(loginView);
       hide(adminView);
@@ -753,10 +721,6 @@
       show(adminView);
     }
 
-
-    /* =====================================================
-       登录
-    ====================================================== */
 
     sendOtpButton.addEventListener(
       "click",
@@ -937,10 +901,6 @@
     );
 
 
-    /* =====================================================
-       检查管理员身份
-    ====================================================== */
-
     async function checkAdminAndLoad() {
 
       clearStatus(systemStatus);
@@ -1019,10 +979,6 @@
     }
 
 
-    /* =====================================================
-       加载提交记录
-    ====================================================== */
-
     async function loadSubmissions() {
 
       setStatus(
@@ -1036,9 +992,29 @@
 
       try {
 
+        /*
+         * 这里不再直接嵌套 profiles。
+         *
+         * 原来的：
+         *
+         * profiles (
+         *   email,
+         *   display_name
+         * )
+         *
+         * 会因为 submissions 和 profiles
+         * 存在多个关系而产生：
+         *
+         * "Could not embed because more than one
+         * relationship was found"
+         *
+         * 现在先读取 submissions，
+         * 再单独读取 profiles。
+         */
+
         const {
-          data,
-          error
+          data: submissionData,
+          error: submissionError
         } =
           await supabaseClient
             .from("submissions")
@@ -1053,10 +1029,6 @@
               reviewed_by,
               submitted_at,
               reviewed_at,
-              profiles (
-                email,
-                display_name
-              ),
               tasks (
                 title,
                 short_description,
@@ -1071,22 +1043,105 @@
             );
 
 
-        if (error) {
-          throw error;
+        if (submissionError) {
+          throw submissionError;
         }
 
 
         const submissions =
-          data || [];
+          submissionData || [];
+
+
+        /*
+         * 获取所有提交学生的 user_id
+         */
+
+        const userIds = [
+          ...new Set(
+            submissions
+              .map(item => item.user_id)
+              .filter(Boolean)
+          )
+        ];
+
+
+        /*
+         * 单独查询 profiles
+         */
+
+        let profiles = [];
+
+
+        if (userIds.length > 0) {
+
+          const {
+            data: profileData,
+            error: profileError
+          } =
+            await supabaseClient
+              .from("profiles")
+              .select(
+                "id, email, display_name"
+              )
+              .in(
+                "id",
+                userIds
+              );
+
+
+          if (profileError) {
+            throw profileError;
+          }
+
+
+          profiles =
+            profileData || [];
+        }
+
+
+        /*
+         * 建立：
+         *
+         * user_id → profile
+         *
+         * 的对应关系
+         */
+
+        const profileMap =
+          new Map(
+            profiles.map(
+              profile => [
+                profile.id,
+                profile
+              ]
+            )
+          );
+
+
+        /*
+         * 把 profile 信息合并回 submission
+         */
+
+        const enrichedSubmissions =
+          submissions.map(
+            submission => ({
+              ...submission,
+
+              profile:
+                profileMap.get(
+                  submission.user_id
+                ) || {}
+            })
+          );
 
 
         updateStats(
-          submissions
+          enrichedSubmissions
         );
 
 
         if (
-          submissions.length === 0
+          enrichedSubmissions.length === 0
         ) {
 
           submissionList.innerHTML = `
@@ -1107,7 +1162,7 @@
 
         for (
           const submission
-          of submissions
+          of enrichedSubmissions
         ) {
 
           const card =
@@ -1128,7 +1183,10 @@
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          "loadSubmissions error:",
+          error
+        );
 
 
         setStatus(
@@ -1140,10 +1198,6 @@
       }
     }
 
-
-    /* =====================================================
-       统计
-    ====================================================== */
 
     function updateStats(
       submissions
@@ -1186,10 +1240,6 @@
     }
 
 
-    /* =====================================================
-       创建审核卡片
-    ====================================================== */
-
     async function createSubmissionCard(
       submission
     ) {
@@ -1205,7 +1255,7 @@
 
 
       const profile =
-        submission.profiles || {};
+        submission.profile || {};
 
 
       const task =
@@ -1231,9 +1281,18 @@
             );
 
 
-        if (!error && data) {
+        if (error) {
+
+          console.error(
+            "Failed to create signed URL:",
+            error
+          );
+
+        } else if (data) {
+
           imageUrl =
             data.signedUrl;
+
         }
 
       } catch (error) {
@@ -1629,10 +1688,6 @@
     }
 
 
-    /* =====================================================
-       审核 submission
-    ====================================================== */
-
     async function reviewSubmission(
       submissionId,
       status,
@@ -1729,19 +1784,11 @@
     }
 
 
-    /* =====================================================
-       刷新
-    ====================================================== */
-
     refreshButton.addEventListener(
       "click",
       loadSubmissions
     );
 
-
-    /* =====================================================
-       登出
-    ====================================================== */
 
     logoutButton.addEventListener(
       "click",
@@ -1767,10 +1814,6 @@
       }
     );
 
-
-    /* =====================================================
-       初始化
-    ====================================================== */
 
     async function init() {
 
