@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+<meta charset="utf-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+<meta name="color-scheme" content="light dark">
+
+<title>我的案件｜Maven 概念侦探社</title>
+
+<style>
+
+:root {
+    --bg: #f7f5ed;
+    --ink: #173538;
+    --muted: #506365;
+    --accent: #0c7464;
+    --line: #b9cdc5;
+    --panel: #ffffff;
+    --secondary: #eef4f0;
+    --buttonink: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "PingFang SC",
+        "Microsoft YaHei",
+        sans-serif;
+    line-height: 1.7;
+}
+
+a {
+    color: inherit;
+}
+
+header {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 22px 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 1px solid var(--line);
+}
+
+.brand {
+    font-weight: 800;
+    text-decoration: none;
+    letter-spacing: .03em;
+}
+
+nav {
+    display: flex;
+    gap: 22px;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+main {
+    width: min(920px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 60px 0 100px;
+}
+
+.case-header {
+    margin-bottom: 38px;
+}
+
+.audience {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+h1 {
+    margin: 0 0 14px;
+    font-size: clamp(38px, 7vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -.04em;
+}
+
+h2 {
+    margin: 0 0 14px;
+    font-size: 26px;
+}
+
+p {
+    margin: 0 0 14px;
+}
+
+.note {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+
+/* 登录卡片 */
+
+.login-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 32px;
+    margin-bottom: 28px;
+}
+
+.login-panel h2 {
+    margin-bottom: 8px;
+}
+
+.login-panel .intro {
+    color: var(--muted);
+    margin-bottom: 26px;
+}
+
+.field {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    min-height: 48px;
+
+    border: 1px solid var(--line);
+    background: var(--bg);
+
+    padding: 11px 13px;
+
+    font: inherit;
+    color: var(--ink);
+
+    border-radius: 0;
+}
+
+input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 48px;
+    padding: 0 22px;
+
+    border: 0;
+    background: var(--accent);
+    color: var(--buttonink);
+
+    font: inherit;
+    font-weight: 800;
+
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.primary:hover {
+    opacity: .9;
+}
+
+.login-note {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+
+/* 案件进度 */
+
+.progress-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 32px;
+    margin-bottom: 28px;
+}
+
+.progress-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 24px 0 30px;
+}
+
+.summary-item {
+    background: var(--secondary);
+    border: 1px solid var(--line);
+    padding: 18px;
+}
+
+.summary-item small {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.summary-item strong {
+    font-size: 22px;
+}
+
+
+/* 任务状态 */
+
+.task-list {
+    display: grid;
+    gap: 10px;
+}
+
+.task-row {
+    border: 1px solid var(--line);
+    padding: 17px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.task-number {
+    font-weight: 900;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.task-title {
+    font-weight: 700;
+}
+
+.status {
+    flex-shrink: 0;
+
+    padding: 4px 9px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    border: 1px solid var(--line);
+    background: var(--secondary);
+}
+
+.status.pending {
+    background: #f3f1e6;
+}
+
+.status.approved {
+    background: #e5f1eb;
+}
+
+.status.rejected {
+    background: #f5e8e5;
+}
+
+
+/* 提交区域 */
+
+.submit-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 32px;
+    margin-bottom: 28px;
+}
+
+.upload-box {
+    border: 2px dashed var(--line);
+    background: var(--bg);
+
+    min-height: 190px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 25px;
+
+    margin: 12px 0 20px;
+
+    cursor: pointer;
+}
+
+.upload-box:hover {
+    border-color: var(--accent);
+}
+
+.upload-box input {
+    display: none;
+}
+
+.upload-content strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.upload-content span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 100px;
+
+    border: 1px solid var(--line);
+    background: var(--bg);
+
+    padding: 12px;
+
+    font: inherit;
+    color: var(--ink);
+
+    resize: vertical;
+}
+
+textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+
+/* 抽奖 */
+
+.lottery-panel {
+    background: var(--ink);
+    color: white;
+
+    padding: 32px;
+
+    margin-bottom: 28px;
+}
+
+.lottery-panel .audience {
+    color: #b9cdc5;
+}
+
+.lottery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    margin: 22px 0;
+}
+
+.lottery-card {
+    border: 1px solid rgba(255,255,255,.25);
+    padding: 20px;
+}
+
+.lottery-card small {
+    display: block;
+    opacity: .7;
+    margin-bottom: 5px;
+}
+
+.lottery-card strong {
+    font-size: 26px;
+}
+
+.lottery-button {
+    display: inline-flex;
+
+    min-height: 48px;
+    padding: 0 22px;
+
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+    color: var(--ink);
+
+    text-decoration: none;
+
+    font-weight: 800;
+}
+
+
+/* 抽奖记录 */
+
+.history-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 32px;
+}
+
+.history-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid var(--line);
+}
+
+.history-row:last-child {
+    border-bottom: 0;
+}
+
+.history-time {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.history-result {
+    font-weight: 700;
+}
+
+
+/* 页脚 */
+
+footer {
+    width: min(920px, calc(100% - 40px));
+    margin: 0 auto;
+
+    padding: 30px 0 50px;
+
+    color: var(--muted);
+    font-size: 13px;
+
+    border-top: 1px solid var(--line);
+}
+
+
+/* 响应式 */
+
+@media (max-width: 700px) {
+
+    header {
+        align-items: flex-start;
+        gap: 14px;
+        flex-direction: column;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        gap: 12px 18px;
+    }
+
+    main {
+        padding-top: 42px;
+    }
+
+    .login-panel,
+    .progress-panel,
+    .submit-panel,
+    .history-panel,
+    .lottery-panel {
+        padding: 22px;
+    }
+
+    .progress-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .lottery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .task-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .history-row {
+        flex-direction: column;
+        gap: 3px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<header>
+
+    <a class="brand" href="../index.html">
+        Maven 概念侦探社
+    </a>
+
+    <nav aria-label="页面导航">
+        <a href="../index.html#clues">任务</a>
+        <a href="../index.html#gifts">礼物</a>
+        <a href="../index.html#my-case">我的案件</a>
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="case-header">
+
+    <p class="audience">
+        CASE FILE / MY CASE
+    </p>
+
+    <h1>我的案件</h1>
+
+    <p class="note">
+        完成任务、提交学习结果，并查看你的审核与抽奖状态。
+    </p>
+
+</section>
+
+
+<!--
+    当前阶段：
+    先展示完整用户端结构。
+    真正的学校邮箱验证码登录将在后续接入。
+-->
+
+<section class="login-panel">
+
+    <p class="audience">
+        SCHOOL ACCOUNT
+    </p>
+
+    <h2>使用学校邮箱登录</h2>
+
+    <p class="intro">
+        请使用你的学校邮箱进入活动。
+        登录后可以查看自己的任务审核状态、抽奖机会和抽奖记录。
+    </p>
+
+
+    <div class="field">
+
+        <label for="school-email">
+            学校邮箱
+        </label>
+
+        <input
+            id="school-email"
+            type="email"
+            placeholder="例如：xxxx@cuhk.edu.cn"
+            autocomplete="email"
+        >
+
+    </div>
+
+
+    <button
+        class="primary"
+        type="button"
+        id="login-button"
+    >
+        获取登录验证码
+    </button>
+
+
+    <p class="login-note">
+        目前为活动系统测试页面。
+        正式上线后，验证码将发送至你的学校邮箱。
+    </p>
+
+</section>
+
+
+<section class="progress-panel">
+
+    <p class="audience">
+        CASE STATUS
+    </p>
+
+    <h2>我的任务进度</h2>
+
+
+    <div class="progress-summary">
+
+        <div class="summary-item">
+            <small>已通过</small>
+            <strong>0 / 6</strong>
+        </div>
+
+        <div class="summary-item">
+            <small>每日抽奖机会</small>
+            <strong>0 次</strong>
+        </div>
+
+        <div class="summary-item">
+            <small>大奖抽奖资格</small>
+            <strong>未获得</strong>
+        </div>
+
+    </div>
+
+
+    <div class="task-list">
+
+        <div class="task-row">
+            <div class="task-left">
+                <span class="task-number">01</span>
+                <span class="task-title">领身份，进入课程</span>
+            </div>
+            <span class="status">未提交</span>
+        </div>
+
+
+        <div class="task-row">
+            <div class="task-left">
+                <span class="task-number">02</span>
+                <span class="task-title">了解案件背景</span>
+            </div>
+            <span class="status">未提交</span>
+        </div>
+
+
+        <div class="task-row">
+            <div class="task-left">
+                <span class="task-number">03</span>
+                <span class="task-title">找一条能核对的线索</span>
+            </div>
+            <span class="status">未提交</span>
+        </div>
+
+
+        <div class="task-row">
+            <div class="task-left">
+                <span class="task-number">04</span>
+                <span class="task-title">根据线索进行追问！</span>
+            </div>
+            <span class="status">未提交</span>
+        </div>
+
+
+        <div class="task-row">
+            <div class="task-left">
+                <span class="task-number">05</span>
+                <span class="task-title">把线索连起来！</span>
+            </div>
+            <span class="status">未提交</span>
+        </div>
+
+
+        <div class="task-row">
+            <div class="task-left">
+                <span class="task-number">06</span>
+                <span class="task-title">结案，留给明天的自己</span>
+            </div>
+            <span class="status">未提交</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="submit-panel" id="my-case-form">
+
+    <p class="audience">
+        SUBMIT EVIDENCE
+    </p>
+
+    <h2>提交一条线索</h2>
+
+    <p class="note">
+        完成任务后，上传能够证明你完成任务的学习结果截图。
+    </p>
+
+
+    <div class="field">
+
+        <label for="task-select">
+            选择任务
+        </label>
+
+        <select
+            id="task-select"
+            style="
+                width:100%;
+                min-height:48px;
+                padding:11px 13px;
+                border:1px solid var(--line);
+                background:var(--bg);
+                color:var(--ink);
+                font:inherit;
+            "
+        >
+
+            <option value="">
+                请选择要提交的任务
+            </option>
+
+            <option value="1">
+                01｜领身份，进入课程
+            </option>
+
+            <option value="2">
+                02｜了解案件背景
+            </option>
+
+            <option value="3">
+                03｜找一条能核对的线索
+            </option>
+
+            <option value="4">
+                04｜根据线索进行追问！
+            </option>
+
+            <option value="5">
+                05｜把线索连起来！
+            </option>
+
+            <option value="6">
+                06｜结案，留给明天的自己
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="field">
+
+        <label>
+            学习结果截图
+        </label>
+
+
+        <label class="upload-box">
+
+            <input
+                type="file"
+                id="screenshot"
+                accept="image/png,image/jpeg"
+            >
+
+            <span class="upload-content">
+
+                <strong>
+                    ＋ 上传学习结果截图
+                </strong>
+
+                <span>
+                    支持 JPG / PNG
+                </span>
+
+            </span>
+
+        </label>
+
+    </div>
+
+
+    <div class="field">
+
+        <label for="remark">
+            备注（选填）
+        </label>
+
+        <textarea
+            id="remark"
+            placeholder="如果需要，可以补充说明你的提交内容。"
+        ></textarea>
+
+    </div>
+
+
+    <button
+        class="primary"
+        type="button"
+        id="submit-button"
+    >
+        提交审核
+    </button>
+
+
+    <p class="login-note">
+        每个任务每人只计一次通过审核。
+        如果审核未通过，可以根据审核意见重新提交。
+    </p>
+
+</section>
+
+
+<section class="lottery-panel">
+
+    <p class="audience">
+        REWARD STATUS
+    </p>
+
+    <h2>我的抽奖</h2>
+
+
+    <div class="lottery-grid">
+
+        <div class="lottery-card">
+
+            <small>
+                每日抽奖机会
+            </small>
+
+            <strong>
+                0 次
+            </strong>
+
+        </div>
+
+
+        <div class="lottery-card">
+
+            <small>
+                大奖抽奖资格
+            </small>
+
+            <strong>
+                未获得
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <a
+        class="lottery-button"
+        href="#"
+        aria-disabled="true"
+    >
+        暂无可用抽奖
+    </a>
+
+</section>
+
+
+<section class="history-panel">
+
+    <p class="audience">
+        DRAW HISTORY
+    </p>
+
+    <h2>抽奖记录</h2>
+
+    <p class="note">
+        完成审核并获得抽奖机会后，
+        抽奖结果会显示在这里。
+    </p>
+
+
+    <div class="history-row">
+
+        <span class="history-time">
+            暂无记录
+        </span>
+
+        <span class="history-result">
+            —
+        </span>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    Maven 概念侦探社 · 活动时间、审核与领取安排见课程群通知。
+
+</footer>
+
+
+<script>
+
+const loginButton = document.getElementById("login-button");
+
+const submitButton = document.getElementById("submit-button");
+
+const screenshot = document.getElementById("screenshot");
+
+
+loginButton.addEventListener("click", function () {
+
+    const email = document
+        .getElementById("school-email")
+        .value
+        .trim();
+
+    if (!email) {
+        alert("请先填写学校邮箱。");
+        return;
+    }
+
+    alert(
+        "学校邮箱登录功能正在接入中。\\n\\n"
+        + "正式上线后，验证码会发送到：\\n"
+        + email
+    );
+
+});
+
+
+submitButton.addEventListener("click", function () {
+
+    const task = document
+        .getElementById("task-select")
+        .value;
+
+    if (!task) {
+        alert("请先选择要提交的任务。");
+        return;
+    }
+
+    if (!screenshot.files.length) {
+        alert("请先上传学习结果截图。");
+        return;
+    }
+
+    alert(
+        "提交功能正在接入中。\\n\\n"
+        + "正式上线后，这份截图会进入审核队列。"
+    );
+
+});
+
+</script>
+
+</body>
+</html>
