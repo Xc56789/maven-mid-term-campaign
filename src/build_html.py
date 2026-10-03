@@ -37,8 +37,7 @@ def build_html():
  toggles=''.join(f'<button class="edition" type="button" data-edition="{s["id"]}" aria-pressed="{str(s["id"]=="archive").lower()}">{s["name"]}</button>' for s in campaign.STYLES)
  gifts=''
  for group in ['每日随机礼','结案大奖']:
-  rows=''.join(f'<li><span>{g["name"]}</span><span class="qty">{g["count"]} {g["unit"]}</span></li>' for g in GIFTS if g['group']==group)
-  gifts+=f'<article class="giftgroup"><h3>{group}</h3><p>{"每通过一项，增加一次每日抽奖机会。" if group=="每日随机礼" else "六项全完成，活动结束额外抽出 6 位获奖者。"}</p><ul>{rows}</ul></article>'
+<section class="rewardstrip" aria-label="参与奖励"><div><small>每一项通过审核</small><strong>每日抽奖机会 +1</strong></div><div><small>六项全部完成</small><strong>额外参加 6 份大奖抽奖</strong></div></section>  gifts+=f'<article class="giftgroup"><h3>{group}</h3><p>{"每通过一项，增加一次每日抽奖机会。" if group=="每日随机礼" else "六项全完成，活动结束额外抽出 6 位获奖者。"}</p><ul>{rows}</ul></article>'
  initial=';'.join('--'+k+':'+v for k,v in variants['archive']['colors'].items())
  dump=lambda value:json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
 <div class="rewardstrip" aria-label="参与奖励"><div><small>每一项通过审核</small><strong>每日抽奖机会 +1</strong></div><div><small>六项全部完成</small><strong>额外参加 6 份大奖抽奖</strong></div></section> output=REPO/'index.html';output.write_text(page,encoding='utf-8')
