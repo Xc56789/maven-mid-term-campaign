@@ -31,17 +31,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Rebuild standalone HTML
-        run: python src/rebuild.py --html-only
+      - name: Rebuild campaign materials and HTML
+        run: python src/rebuild.py
 
-      - name: Commit rebuilt HTML
+      - name: Commit rebuilt materials and HTML
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
+          git add index.html materials/ docs/
           if git diff --cached --quiet; then
-            echo "No changes to index.html"
+            echo "No changes to commit"
           else
-            git commit -m "Rebuild standalone campaign HTML"
+            git commit -m "Rebuild campaign materials and HTML"
             git push
           fi
