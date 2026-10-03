@@ -98,6 +98,5 @@ def card(c,s):
         end=y+13+len(wrap(CARDTEXT[i][1],bw-26,9.1))*13
         assert end < top+bh-5,(s['id'],i,end,top+bh)
     text(c,28,646,'每项通过审核：每日抽奖 1 次 / 全部 6 项：额外参加结案抽奖',10.5,True,s['ink'])
-    text(c,28,674,'任意 1 项通过可领贴纸 ×1，限量先到先得。',9,fill=s['muted'])
     text(c,28,695,'ask-maven.com  ·  考试安排以课程通知为准  ·  找不到课程请联系 TA',8.5,fill=s['muted'])
     c.showPage()
