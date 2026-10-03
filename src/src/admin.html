@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Maven · 管理员审核后台</title>
+
+  <style>
+    :root {
+      --green: #264e3e;
+      --green-light: #e7eee9;
+      --cream: #f0f2ed;
+      --white: #ffffff;
+      --text: #26332d;
+      --muted: #718078;
+      --border: #d9dfda;
+      --yellow: #f4d96b;
+      --red: #b94a48;
+      --red-light: #f9e8e7;
+      --shadow: 0 10px 30px rgba(38, 78, 62, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--text);
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "PingFang SC",
+        "Microsoft YaHei",
+        sans-serif;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 70px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.2;
+      color: var(--green);
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .logout-button {
+      border: 1px solid var(--border);
+      background: var(--white);
+      color: var(--green);
+      border-radius: 999px;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .logout-button:hover {
+      background: var(--green-light);
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .panel-title {
+      margin: 0 0 8px;
+      font-size: 20px;
+      color: var(--green);
+    }
+
+    .panel-description {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .login-box {
+      max-width: 520px;
+      margin: 80px auto;
+    }
+
+    .login-box h1 {
+      font-size: 30px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--green);
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #fbfcfb;
+      color: var(--text);
+      outline: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--green);
+    }
+
+    .field textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .primary-button {
+      border: none;
+      border-radius: 12px;
+      background: var(--green);
+      color: white;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .primary-button:hover {
+      opacity: 0.92;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--white);
+      color: var(--green);
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .secondary-button:hover {
+      background: var(--green-light);
+    }
+
+    .danger-button {
+      border: none;
+      border-radius: 12px;
+      background: var(--red);
+      color: white;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .danger-button:hover {
+      opacity: 0.92;
+    }
+
+    .status-box {
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: var(--green-light);
+      color: var(--green);
+      line-height: 1.6;
+      margin-top: 16px;
+      white-space: pre-wrap;
+    }
+
+    .status-box.error {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stat {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .stat-label {
+      margin-top: 5px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .submission-list {
+      display: grid;
+      gap: 18px;
+    }
+
+    .submission-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .submission-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .submission-title {
+      margin: 0;
+      font-size: 19px;
+      color: var(--green);
+    }
+
+    .submission-email {
+      margin-top: 7px;
+      font-size: 14px;
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge.pending {
+      background: #fff6d8;
+      color: #8a6b00;
+    }
+
+    .badge.approved {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .badge.rejected {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .submission-body {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(300px, 1fr);
+      gap: 24px;
+      padding: 20px;
+    }
+
+    .evidence-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #f8faf8;
+      min-height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .evidence-box img {
+      display: block;
+      width: 100%;
+      max-height: 520px;
+      object-fit: contain;
+      background: #f4f6f4;
+    }
+
+    .evidence-placeholder {
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .meta {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-row {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .meta-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .meta-value {
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .review-area {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .review-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--muted);
+    }
+
+    .user-info {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100% - 20px, 1180px);
+        padding-top: 24px;
+      }
+
+      .header {
+        flex-direction: column;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .submission-body {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       登录页面
+  ====================================================== -->
+
+  <main id="loginView" class="page hidden">
+
+    <section class="panel login-box">
+
+      <div class="eyebrow">MAVEN · ADMIN</div>
+
+      <h1>管理员审核后台</h1>
+
+      <p class="subtitle">
+        使用管理员账号登录。
+        学生账号不能进入审核后台。
+      </p>
+
+      <div class="field">
+        <label for="emailInput">管理员邮箱</label>
+
+        <input
+          id="emailInput"
+          type="email"
+          placeholder="请输入你的学校邮箱"
+          autocomplete="email"
+        >
+      </div>
+
+      <button id="sendOtpButton" class="primary-button">
+        发送验证码
+      </button>
+
+      <div id="otpArea" class="hidden" style="margin-top: 20px;">
+
+        <div class="field">
+          <label for="otpInput">验证码</label>
+
+          <input
+            id="otpInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="输入 6 位验证码"
+          >
+        </div>
+
+        <button id="verifyOtpButton" class="primary-button">
+          登录后台
+        </button>
+
+      </div>
+
+      <div id="loginStatus" class="status-box hidden"></div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       管理员后台
+  ====================================================== -->
+
+  <main id="adminView" class="page hidden">
+
+    <header class="header">
+
+      <div>
+
+        <div class="eyebrow">
+          MAVEN · REVIEW CENTER
+        </div>
+
+        <h1>
+          管理员审核后台
+        </h1>
+
+        <p class="subtitle">
+          查看学生任务证明，并审核任务完成情况。
+        </p>
+
+        <div id="adminEmail" class="user-info"></div>
+
+      </div>
+
+      <button id="logoutButton" class="logout-button">
+        退出登录
+      </button>
+
+    </header>
+
+
+    <!-- ===================================================
+         数据统计
+    ==================================================== -->
+
+    <section class="stats">
+
+      <div class="stat">
+        <div id="pendingCount" class="stat-number">
+          0
+        </div>
+
+        <div class="stat-label">
+          待审核
+        </div>
+      </div>
+
+      <div class="stat">
+        <div id="approvedCount" class="stat-number">
+          0
+        </div>
+
+        <div class="stat-label">
+          已通过
+        </div>
+      </div>
+
+      <div class="stat">
+        <div id="rejectedCount" class="stat-number">
+          0
+        </div>
+
+        <div class="stat-label">
+          已驳回
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         审核列表
+    ==================================================== -->
+
+    <section class="panel">
+
+      <h2 class="panel-title">
+        学生提交
+      </h2>
+
+      <p class="panel-description">
+        待审核的任务会显示在这里。
+        点击截图可以查看学生提交的证明。
+      </p>
+
+      <div style="margin-bottom: 18px;">
+        <button id="refreshButton" class="secondary-button">
+          刷新列表
+        </button>
+      </div>
+
+      <div id="systemStatus" class="status-box hidden"></div>
+
+      <div id="submissionList" class="submission-list"></div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       Supabase
+  ====================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="supabase-config.js"></script>
+
+
+  <script>
+    const CONFIG = window.SUPABASE_CONFIG || {};
+
+    const SUPABASE_URL = CONFIG.url;
+    const SUPABASE_KEY = CONFIG.publishableKey;
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+      document.body.innerHTML = `
+        <main class="page">
+          <section class="panel">
+            <h1>配置错误</h1>
+            <p>
+              找不到 Supabase 配置。
+              请检查 src/supabase-config.js。
+            </p>
+          </section>
+        </main>
+      `;
+      throw new Error("Missing Supabase configuration.");
+    }
+
+
+    const {
+      createClient
+    } = supabase;
+
+
+    const supabaseClient = createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+
+    /* =====================================================
+       DOM
+    ====================================================== */
+
+    const loginView =
+      document.getElementById("loginView");
+
+    const adminView =
+      document.getElementById("adminView");
+
+    const emailInput =
+      document.getElementById("emailInput");
+
+    const otpInput =
+      document.getElementById("otpInput");
+
+    const sendOtpButton =
+      document.getElementById("sendOtpButton");
+
+    const verifyOtpButton =
+      document.getElementById("verifyOtpButton");
+
+    const otpArea =
+      document.getElementById("otpArea");
+
+    const loginStatus =
+      document.getElementById("loginStatus");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+    const refreshButton =
+      document.getElementById("refreshButton");
+
+    const submissionList =
+      document.getElementById("submissionList");
+
+    const systemStatus =
+      document.getElementById("systemStatus");
+
+    const adminEmail =
+      document.getElementById("adminEmail");
+
+    const pendingCount =
+      document.getElementById("pendingCount");
+
+    const approvedCount =
+      document.getElementById("approvedCount");
+
+    const rejectedCount =
+      document.getElementById("rejectedCount");
+
+
+    /* =====================================================
+       工具函数
+    ====================================================== */
+
+    function show(element) {
+      element.classList.remove("hidden");
+    }
+
+    function hide(element) {
+      element.classList.add("hidden");
+    }
+
+    function setStatus(element, message, isError = false) {
+      element.textContent = message;
+      element.classList.remove("hidden");
+      element.classList.toggle("error", isError);
+    }
+
+    function clearStatus(element) {
+      element.textContent = "";
+      element.classList.add("hidden");
+      element.classList.remove("error");
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(value) {
+      if (!value) {
+        return "-";
+      }
+
+      try {
+        return new Date(value).toLocaleString(
+          "zh-CN",
+          {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        );
+      } catch {
+        return value;
+      }
+    }
+
+
+    /* =====================================================
+       页面状态
+    ====================================================== */
+
+    function showLogin() {
+      show(loginView);
+      hide(adminView);
+    }
+
+    function showAdmin() {
+      hide(loginView);
+      show(adminView);
+    }
+
+
+    /* =====================================================
+       登录
+    ====================================================== */
+
+    sendOtpButton.addEventListener(
+      "click",
+      async () => {
+
+        clearStatus(loginStatus);
+
+        const email =
+          emailInput.value.trim().toLowerCase();
+
+        if (!email) {
+          setStatus(
+            loginStatus,
+            "请输入管理员邮箱。",
+            true
+          );
+          return;
+        }
+
+        if (!email.endsWith("@link.cuhk.edu.cn")) {
+          setStatus(
+            loginStatus,
+            "请使用 CUHK-Shenzhen 学校邮箱登录。",
+            true
+          );
+          return;
+        }
+
+        sendOtpButton.disabled = true;
+        sendOtpButton.textContent =
+          "正在发送……";
+
+        try {
+
+          const {
+            error
+          } = await supabaseClient.auth.signInWithOtp({
+            email,
+            options: {
+              shouldCreateUser: true
+            }
+          });
+
+          if (error) {
+            throw error;
+          }
+
+          show(otpArea);
+
+          setStatus(
+            loginStatus,
+            "验证码已经发送，请检查你的邮箱。"
+          );
+
+          otpInput.focus();
+
+        } catch (error) {
+
+          console.error(error);
+
+          setStatus(
+            loginStatus,
+            "发送验证码失败：\n" +
+            (error.message || error),
+            true
+          );
+
+        } finally {
+
+          sendOtpButton.disabled = false;
+          sendOtpButton.textContent =
+            "重新发送验证码";
+        }
+      }
+    );
+
+
+    verifyOtpButton.addEventListener(
+      "click",
+      async () => {
+
+        clearStatus(loginStatus);
+
+        const email =
+          emailInput.value.trim().toLowerCase();
+
+        const token =
+          otpInput.value.trim();
+
+        if (!token) {
+          setStatus(
+            loginStatus,
+            "请输入验证码。",
+            true
+          );
+          return;
+        }
+
+        verifyOtpButton.disabled = true;
+        verifyOtpButton.textContent =
+          "正在登录……";
+
+        try {
+
+          const {
+            data,
+            error
+          } = await supabaseClient.auth.verifyOtp({
+            email,
+            token,
+            type: "email"
+          });
+
+          if (error) {
+            throw error;
+          }
+
+          if (!data.session) {
+            throw new Error(
+              "登录成功，但没有建立会话。"
+            );
+          }
+
+          await checkAdminAndLoad();
+
+        } catch (error) {
+
+          console.error(error);
+
+          setStatus(
+            loginStatus,
+            "登录失败：\n" +
+            (error.message || error),
+            true
+          );
+
+        } finally {
+
+          verifyOtpButton.disabled = false;
+          verifyOtpButton.textContent =
+            "登录后台";
+        }
+      }
+    );
+
+
+    /* =====================================================
+       检查管理员身份
+    ====================================================== */
+
+    async function checkAdminAndLoad() {
+
+      clearStatus(systemStatus);
+
+      const {
+        data: {
+          user
+        }
+      } = await supabaseClient.auth.getUser();
+
+      if (!user) {
+        showLogin();
+        return;
+      }
+
+      const {
+        data: adminRecord,
+        error
+      } = await supabaseClient
+        .from("admins")
+        .select("user_id, role")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error(error);
+
+        showLogin();
+
+        setStatus(
+          loginStatus,
+          "无法检查管理员权限：\n" +
+          error.message,
+          true
+        );
+
+        return;
+      }
+
+      if (!adminRecord) {
+
+        await supabaseClient.auth.signOut();
+
+        showLogin();
+
+        setStatus(
+          loginStatus,
+          "这个账号没有管理员权限。",
+          true
+        );
+
+        return;
+      }
+
+      adminEmail.textContent =
+        `${user.email} · ${adminRecord.role}`;
+
+      showAdmin();
+
+      await loadSubmissions();
+    }
+
+
+    /* =====================================================
+       加载提交记录
+    ====================================================== */
+
+    async function loadSubmissions() {
+
+      setStatus(
+        systemStatus,
+        "正在加载提交记录……"
+      );
+
+      submissionList.innerHTML = "";
+
+      try {
+
+        const {
+          data,
+          error
+        } = await supabaseClient
+          .from("submissions")
+          .select(`
+            id,
+            user_id,
+            task_id,
+            screenshot_path,
+            note,
+            status,
+            review_note,
+            reviewed_by,
+            submitted_at,
+            reviewed_at,
+            profiles (
+              email,
+              display_name
+            ),
+            tasks (
+              title,
+              short_description,
+              task_order
+            )
+          `)
+          .order("submitted_at", {
+            ascending: false
+          });
+
+        if (error) {
+          throw error;
+        }
+
+        const submissions =
+          data || [];
+
+        updateStats(submissions);
+
+        if (submissions.length === 0) {
+
+          submissionList.innerHTML = `
+            <div class="empty">
+              目前还没有学生提交记录。
+            </div>
+          `;
+
+          clearStatus(systemStatus);
+
+          return;
+        }
+
+        for (const submission of submissions) {
+
+          const card =
+            await createSubmissionCard(
+              submission
+            );
+
+          submissionList.appendChild(card);
+        }
+
+        clearStatus(systemStatus);
+
+      } catch (error) {
+
+        console.error(error);
+
+        setStatus(
+          systemStatus,
+          "加载提交记录失败：\n" +
+          (error.message || error),
+          true
+        );
+      }
+    }
+
+
+    /* =====================================================
+       统计
+    ====================================================== */
+
+    function updateStats(submissions) {
+
+      const pending =
+        submissions.filter(
+          item => item.status === "pending"
+        ).length;
+
+      const approved =
+        submissions.filter(
+          item => item.status === "approved"
+        ).length;
+
+      const rejected =
+        submissions.filter(
+          item => item.status === "rejected"
+        ).length;
+
+      pendingCount.textContent =
+        pending;
+
+      approvedCount.textContent =
+        approved;
+
+      rejectedCount.textContent =
+        rejected;
+    }
+
+
+    /* =====================================================
+       创建审核卡片
+    ====================================================== */
+
+    async function createSubmissionCard(
+      submission
+    ) {
+
+      const card =
+        document.createElement("article");
+
+      card.className =
+        "submission-card";
+
+      const profile =
+        submission.profiles || {};
+
+      const task =
+        submission.tasks || {};
+
+      let imageUrl = null;
+
+      try {
+
+        const {
+          data,
+          error
+        } = await supabaseClient.storage
+          .from("maven-submissions")
+          .createSignedUrl(
+            submission.screenshot_path,
+            60 * 10
+          );
+
+        if (!error && data) {
+          imageUrl =
+            data.signedUrl;
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Failed to create signed URL:",
+          error
+        );
+      }
+
+
+      const statusText = {
+        pending: "待审核",
+        approved: "已通过",
+        rejected: "已驳回"
+      };
+
+
+      const statusClass =
+        submission.status || "pending";
+
+
+      const screenshotHtml =
+        imageUrl
+          ? `
+            <a
+              href="${escapeHtml(imageUrl)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="${escapeHtml(imageUrl)}"
+                alt="学生提交的截图"
+              >
+            </a>
+          `
+          : `
+            <div class="evidence-placeholder">
+              无法生成截图访问链接。
+            </div>
+          `;
+
+
+      let reviewHtml = "";
+
+      if (submission.status === "pending") {
+
+        reviewHtml = `
+          <div class="review-area">
+
+            <div class="field">
+
+              <label>
+                审核备注 / 驳回原因
+              </label>
+
+              <textarea
+                class="review-note-input"
+                placeholder="如果驳回，请填写原因；通过时可以留空。"
+              ></textarea>
+
+            </div>
+
+            <div class="review-actions">
+
+              <button
+                class="primary-button approve-button"
+                data-id="${escapeHtml(submission.id)}"
+              >
+                通过
+              </button>
+
+              <button
+                class="danger-button reject-button"
+                data-id="${escapeHtml(submission.id)}"
+              >
+                驳回
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+      } else {
+
+        reviewHtml = `
+          <div class="review-area">
+
+            <div class="meta">
+
+              <div class="meta-row">
+
+                <div class="meta-label">
+                  审核结果
+                </div>
+
+                <div class="meta-value">
+                  ${escapeHtml(
+                    statusText[submission.status]
+                    || submission.status
+                  )}
+                </div>
+
+              </div>
+
+              ${
+                submission.review_note
+                  ? `
+                    <div class="meta-row">
+
+                      <div class="meta-label">
+                        审核备注
+                      </div>
+
+                      <div class="meta-value">
+                        ${escapeHtml(
+                          submission.review_note
+                        )}
+                      </div>
+
+                    </div>
+                  `
+                  : ""
+              }
+
+              ${
+                submission.reviewed_at
+                  ? `
+                    <div class="meta-row">
+
+                      <div class="meta-label">
+                        审核时间
+                      </div>
+
+                      <div class="meta-value">
+                        ${escapeHtml(
+                          formatDate(
+                            submission.reviewed_at
+                          )
+                        )}
+                      </div>
+
+                    </div>
+                  `
+                  : ""
+              }
+
+            </div>
+
+          </div>
+        `;
+      }
+
+
+      card.innerHTML = `
+
+        <div class="submission-top">
+
+          <div>
+
+            <h3 class="submission-title">
+
+              第 ${
+                escapeHtml(
+                  task.task_order ?? submission.task_id
+                )
+              } 项 · ${
+                escapeHtml(
+                  task.title || "未知任务"
+                )
+              }
+
+            </h3>
+
+            <div class="submission-email">
+
+              ${
+                escapeHtml(
+                  profile.display_name
+                  || profile.email
+                  || submission.user_id
+                )
+              }
+
+              ${
+                profile.email
+                  ? `
+                    · ${escapeHtml(profile.email)}
+                  `
+                  : ""
+              }
+
+            </div>
+
+          </div>
+
+          <span class="badge ${statusClass}">
+            ${
+              escapeHtml(
+                statusText[submission.status]
+                || submission.status
+              )
+            }
+          </span>
+
+        </div>
+
+
+        <div class="submission-body">
+
+          <div>
+
+            <div class="evidence-box">
+              ${screenshotHtml}
+            </div>
+
+          </div>
+
+
+          <div>
+
+            <div class="meta">
+
+              <div class="meta-row">
+
+                <div class="meta-label">
+                  任务
+                </div>
+
+                <div class="meta-value">
+                  ${escapeHtml(
+                    task.title || "-"
+                  )}
+                </div>
+
+              </div>
+
+
+              <div class="meta-row">
+
+                <div class="meta-label">
+                  任务说明
+                </div>
+
+                <div class="meta-value">
+                  ${escapeHtml(
+                    task.short_description || "-"
+                  )}
+                </div>
+
+              </div>
+
+
+              <div class="meta-row">
+
+                <div class="meta-label">
+                  提交时间
+                </div>
+
+                <div class="meta-value">
+                  ${escapeHtml(
+                    formatDate(
+                      submission.submitted_at
+                    )
+                  )}
+                </div>
+
+              </div>
+
+
+              <div class="meta-row">
+
+                <div class="meta-label">
+                  学生备注
+                </div>
+
+                <div class="meta-value">
+                  ${
+                    submission.note
+                      ? escapeHtml(
+                          submission.note
+                        )
+                      : "无"
+                  }
+                </div>
+
+              </div>
+
+            </div>
+
+            ${reviewHtml}
+
+          </div>
+
+        </div>
+      `;
+
+
+      const approveButton =
+        card.querySelector(
+          ".approve-button"
+        );
+
+      const rejectButton =
+        card.querySelector(
+          ".reject-button"
+        );
+
+      const noteInput =
+        card.querySelector(
+          ".review-note-input"
+        );
+
+
+      if (approveButton) {
+
+        approveButton.addEventListener(
+          "click",
+          async () => {
+
+            await reviewSubmission(
+              submission.id,
+              "approved",
+              noteInput
+                ? noteInput.value
+                : ""
+            );
+
+          }
+        );
+
+      }
+
+
+      if (rejectButton) {
+
+        rejectButton.addEventListener(
+          "click",
+          async () => {
+
+            const note =
+              noteInput
+                ? noteInput.value.trim()
+                : "";
+
+            if (!note) {
+
+              alert(
+                "请填写驳回原因。"
+              );
+
+              return;
+            }
+
+            await reviewSubmission(
+              submission.id,
+              "rejected",
+              note
+            );
+
+          }
+        );
+
+      }
+
+
+      return card;
+    }
+
+
+    /* =====================================================
+       审核 submission
+    ====================================================== */
+
+    async function reviewSubmission(
+      submissionId,
+      status,
+      reviewNote
+    ) {
+
+      const actionText =
+        status === "approved"
+          ? "通过"
+          : "驳回";
+
+
+      const confirmed =
+        window.confirm(
+          `确定要${actionText}这条提交吗？`
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      setStatus(
+        systemStatus,
+        `正在${actionText}……`
+      );
+
+
+      try {
+
+        const {
+          data,
+          error
+        } = await supabaseClient.rpc(
+          "review_submission",
+          {
+            p_submission_id:
+              submissionId,
+
+            p_status:
+              status,
+
+            p_review_note:
+              reviewNote || null
+          }
+        );
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        console.log(
+          "Review result:",
+          data
+        );
+
+
+        if (status === "approved") {
+
+          setStatus(
+            systemStatus,
+            "审核通过。该任务已经计入完成记录，并自动增加 1 次每日抽奖机会。"
+          );
+
+        } else {
+
+          setStatus(
+            systemStatus,
+            "已驳回。学生可以重新提交，并会看到驳回原因。"
+          );
+
+        }
+
+
+        await loadSubmissions();
+
+      } catch (error) {
+
+        console.error(error);
+
+        setStatus(
+          systemStatus,
+          `审核${actionText}失败：\n` +
+          (error.message || error),
+          true
+        );
+      }
+    }
+
+
+    /* =====================================================
+       刷新
+    ====================================================== */
+
+    refreshButton.addEventListener(
+      "click",
+      loadSubmissions
+    );
+
+
+    /* =====================================================
+       登出
+    ====================================================== */
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        await supabaseClient.auth.signOut();
+
+        showLogin();
+
+        emailInput.value = "";
+        otpInput.value = "";
+
+        hide(otpArea);
+
+        clearStatus(loginStatus);
+      }
+    );
+
+
+    /* =====================================================
+       初始化
+    ====================================================== */
+
+    async function init() {
+
+      showLogin();
+
+      try {
+
+        const {
+          data: {
+            session
+          }
+        } = await supabaseClient.auth.getSession();
+
+        if (session) {
+          await checkAdminAndLoad();
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        setStatus(
+          loginStatus,
+          "初始化失败：\n" +
+          (error.message || error),
+          true
+        );
+      }
+    }
+
+
+    supabaseClient.auth.onAuthStateChange(
+      async (
+        event,
+        session
+      ) => {
+
+        if (
+          event === "SIGNED_IN"
+          && session
+        ) {
+
+          await checkAdminAndLoad();
+
+        }
+
+      }
+    );
+
+
+    init();
+
+  </script>
+
+</body>
+</html>
