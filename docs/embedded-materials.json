@@ -14,44 +14,8 @@
   "archive-campaign": {
     "mime": "application/pdf",
     "filename": "Maven-概念侦探社-线索档案版-海报与任务卡.pdf",
-    "sha256": "4494c34ce684342686867c44805f858b3e150dc7a189f8d96e14d37ba4a9a344",
+    "sha256": "dd02026017bd68bde4423ae2c80d321acefce305108042c5fefa39c0adcdfd6d",
     "bytes": 4523474
-  },
-  "night-poster": {
-    "mime": "image/png",
-    "filename": "Maven-概念侦探社-夜间调查版-海报.png",
-    "sha256": "9f50620559b30a979fb9f44cfe6a841845b20657ae6a475862266cb9d66e3f77",
-    "bytes": 1566442
-  },
-  "night-task-card": {
-    "mime": "image/png",
-    "filename": "Maven-概念侦探社-夜间调查版-任务卡.png",
-    "sha256": "23c5077e78a3301e0e422daac01f846481dac6fc8f09032e7c78873b33d9ee97",
-    "bytes": 252765
-  },
-  "night-campaign": {
-    "mime": "application/pdf",
-    "filename": "Maven-概念侦探社-夜间调查版-海报与任务卡.pdf",
-    "sha256": "9d3d636382dd6b0055b0eb4c0edff07a9d12b77d9f0fa5fed91d7fcf3f440ed6",
-    "bytes": 3916188
-  },
-  "club-poster": {
-    "mime": "image/png",
-    "filename": "Maven-概念侦探社-校园社团版-海报.png",
-    "sha256": "fdff2b1cb11ca2e36dfab61880dc0bf9914609fd231164e9ba3a8712d0b755fe",
-    "bytes": 1669471
-  },
-  "club-task-card": {
-    "mime": "image/png",
-    "filename": "Maven-概念侦探社-校园社团版-任务卡.png",
-    "sha256": "0244621eb70711a71152d18d0bd71eaa30290f219981e28b0159bc85f8c4a25b",
-    "bytes": 254650
-  },
-  "club-campaign": {
-    "mime": "application/pdf",
-    "filename": "Maven-概念侦探社-校园社团版-海报与任务卡.pdf",
-    "sha256": "736030f3d3295a22ba5cbef990a45b5990c11f61e31727c182fe003fb4bc2bcd",
-    "bytes": 3692322
   },
   "notice": {
     "mime": "text/plain;charset=utf-8",
