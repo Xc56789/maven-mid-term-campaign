@@ -3,24 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>我的案件｜Maven 概念侦探社</title>
+  <title>Maven｜我的案件</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./supabase-config.js"></script>
 
   <style>
     :root {
-      --bg: #f7f5ed;
-      --ink: #173538;
-      --muted: #506365;
-      --accent: #0c7464;
-      --line: #b9cdc5;
-      --panel: #ffffff;
-      --secondary: #eef4f0;
-      --danger: #a94442;
-      --warning: #8a6d3b;
-      --shadow: 0 12px 35px rgba(23, 53, 56, 0.08);
+      --paper: #f0f2ed;
+      --ink: #24342f;
+      --green: #264e3e;
+      --green-light: #dfe7df;
+      --line: #8d9a91;
+      --red: #8c4d43;
+      --white: #ffffff;
+      --muted: #68736d;
+      --shadow: 0 10px 30px rgba(38, 78, 62, 0.08);
     }
 
     * {
@@ -30,44 +28,28 @@
     body {
       margin: 0;
       background:
-        linear-gradient(
-          rgba(247, 245, 237, 0.92),
-          rgba(247, 245, 237, 0.92)
-        ),
-        repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 28px,
-          rgba(23, 53, 56, 0.025) 29px
-        );
+        linear-gradient(rgba(38, 78, 62, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(38, 78, 62, 0.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 24px 24px;
       color: var(--ink);
       font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         "PingFang SC",
-        "Hiragino Sans GB",
         "Microsoft YaHei",
         sans-serif;
-      min-height: 100vh;
     }
 
     a {
       color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input,
-    select,
-    textarea {
-      font: inherit;
     }
 
     .page {
-      width: min(1120px, calc(100% - 32px));
+      width: min(1080px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 24px 0 60px;
+      padding: 28px 0 70px;
     }
 
     .topbar {
@@ -75,223 +57,179 @@
       justify-content: space-between;
       align-items: center;
       gap: 20px;
-      padding: 10px 0 24px;
-      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border: 1px solid var(--ink);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      letter-spacing: -1px;
-      background: var(--panel);
-    }
-
-    .brand-text {
-      line-height: 1.15;
-    }
-
-    .brand-name {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-    }
-
-    .brand-sub {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      color: var(--muted);
       font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      color: var(--green);
     }
 
-    .nav a:hover {
-      color: var(--accent);
-    }
-
-    .hero {
-      padding: 62px 0 38px;
-      display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
-      gap: 32px;
-      align-items: end;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      margin-bottom: 18px;
-      padding: 5px 9px;
-      border: 1px solid var(--line);
-      background: var(--panel);
+    .back-link {
+      font-size: 13px;
+      text-decoration: none;
       color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      font-weight: 700;
+    }
+
+    .back-link:hover {
+      color: var(--green);
+    }
+
+    .case-header {
+      position: relative;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+      padding: 34px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .case-header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 7px;
+      background: var(--green);
+    }
+
+    .case-label {
+      font-family: Georgia, serif;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 12px;
     }
 
     h1 {
-      margin: 0;
+      margin: 0 0 10px;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(42px, 7vw, 78px);
-      line-height: 0.98;
-      letter-spacing: -0.045em;
-      font-weight: 600;
+      font-size: clamp(38px, 7vw, 68px);
+      line-height: 0.95;
+      font-weight: 700;
+      color: var(--green);
     }
 
-    .hero-desc {
-      margin: 20px 0 0;
-      max-width: 620px;
+    .header-description {
+      max-width: 680px;
+      margin: 0;
+      line-height: 1.8;
       color: var(--muted);
       font-size: 15px;
-      line-height: 1.8;
     }
 
-    .case-stamp {
-      justify-self: end;
-      width: 180px;
-      height: 180px;
-      border: 1px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: rotate(-5deg);
-      color: var(--accent);
-      background: rgba(255, 255, 255, 0.42);
-      text-align: center;
-    }
-
-    .case-stamp-inner {
-      width: 138px;
-      height: 138px;
-      border: 1px dashed var(--accent);
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .case-stamp-big {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 26px;
-    }
-
-    .case-stamp-small {
-      font-size: 10px;
+    .stamp {
+      position: absolute;
+      right: 28px;
+      top: 28px;
+      border: 2px solid var(--green);
+      color: var(--green);
+      padding: 9px 12px;
+      font-size: 11px;
+      font-weight: 800;
       letter-spacing: 0.12em;
+      transform: rotate(-5deg);
+      opacity: 0.82;
     }
 
     .panel {
-      background: rgba(255, 255, 255, 0.9);
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.86);
       border: 1px solid var(--line);
+      padding: 28px;
       box-shadow: var(--shadow);
     }
 
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--line);
-    }
-
     .panel-title {
-      font-weight: 800;
-      font-size: 15px;
-    }
-
-    .panel-label {
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: 0.12em;
-    }
-
-    .panel-body {
-      padding: 24px;
+      margin: 0 0 18px;
+      color: var(--green);
+      font-family: Georgia, serif;
+      font-size: 25px;
     }
 
     .login-panel {
-      max-width: 720px;
-      margin: 0 auto 32px;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .login-copy {
-      color: var(--muted);
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
       font-size: 13px;
-      line-height: 1.8;
-      margin-bottom: 20px;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .input {
-      width: 100%;
-      min-height: 46px;
-      padding: 0 14px;
-      border: 1px solid var(--line);
-      background: #fff;
+      font-weight: 700;
       color: var(--ink);
+    }
+
+    input[type="email"],
+    input[type="text"],
+    input[type="file"],
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      padding: 13px 14px;
+      font: inherit;
       outline: none;
     }
 
-    .input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(12, 116, 100, 0.08);
+    input:focus,
+    textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(38, 78, 62, 0.08);
     }
 
-    .btn {
-      min-height: 46px;
-      padding: 0 18px;
-      border: 1px solid var(--ink);
-      background: var(--ink);
-      color: #fff;
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      border: 1px solid var(--green);
+      background: var(--green);
+      color: white;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
       cursor: pointer;
-      white-space: nowrap;
-      transition: 0.15s ease;
     }
 
-    .btn:hover {
-      background: var(--accent);
-      border-color: var(--accent);
+    button:hover {
+      opacity: 0.9;
     }
 
-    .btn.secondary {
+    button.secondary {
       background: transparent;
-      color: var(--ink);
+      color: var(--green);
     }
 
-    .btn.secondary:hover {
-      background: var(--secondary);
+    button.danger {
+      background: transparent;
+      border-color: var(--red);
+      color: var(--red);
     }
 
-    .btn:disabled {
+    button:disabled {
       cursor: not-allowed;
       opacity: 0.5;
     }
 
     .hint {
-      margin-top: 10px;
+      margin: 8px 0 0;
       color: var(--muted);
       font-size: 12px;
       line-height: 1.6;
@@ -300,9 +238,10 @@
     .message {
       display: none;
       margin-top: 14px;
-      padding: 11px 13px;
-      border: 1px solid var(--line);
-      background: var(--secondary);
+      padding: 12px 14px;
+      border-left: 4px solid var(--green);
+      background: var(--green-light);
+      color: var(--ink);
       font-size: 13px;
       line-height: 1.6;
     }
@@ -312,298 +251,179 @@
     }
 
     .message.error {
-      border-color: #d7aaa8;
-      background: #fbf1f0;
-      color: var(--danger);
+      border-left-color: var(--red);
+      background: #f3e5e2;
     }
 
-    .message.success {
-      border-color: var(--line);
-      background: var(--secondary);
-      color: var(--ink);
+    .hidden {
+      display: none !important;
     }
 
     .user-bar {
-      display: none;
-      max-width: 720px;
-      margin: 0 auto 32px;
-      padding: 15px 18px;
-      border: 1px solid var(--line);
-      background: var(--secondary);
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .user-bar.show {
       display: flex;
-    }
-
-    .user-info-label {
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      margin-bottom: 4px;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px dashed var(--line);
     }
 
     .user-email {
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 13px;
+      color: var(--muted);
       word-break: break-all;
-    }
-
-    .dashboard {
-      display: none;
-    }
-
-    .dashboard.show {
-      display: block;
     }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-bottom: 32px;
+      gap: 12px;
+      margin-bottom: 22px;
     }
 
     .stat {
-      padding: 22px;
       border: 1px solid var(--line);
-      background: var(--panel);
+      background: rgba(240, 242, 237, 0.65);
+      padding: 18px;
     }
 
     .stat-label {
       color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
+      font-size: 12px;
+      margin-bottom: 8px;
     }
 
     .stat-value {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 34px;
+      color: var(--green);
+      font-family: Georgia, serif;
+      font-size: 30px;
+      font-weight: 700;
     }
 
-    .section {
-      margin-bottom: 32px;
+    .task-list {
+      display: grid;
+      gap: 14px;
     }
 
-    .section-heading {
+    .task {
+      border: 1px solid var(--line);
+      padding: 20px;
+      background: white;
+    }
+
+    .task-head {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      gap: 16px;
-      margin-bottom: 14px;
+      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 10px;
     }
 
-    .section-heading h2 {
+    .task-number {
+      font-family: Georgia, serif;
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .task-title {
+      margin: 3px 0 6px;
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .task-description {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 27px;
-      font-weight: 600;
-    }
-
-    .section-heading span {
       color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.08em;
+      font-size: 13px;
+      line-height: 1.7;
     }
 
-    .tasks {
+    .status {
+      flex-shrink: 0;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status.pending {
+      color: #755c2b;
+      border-color: #b7a26e;
+      background: #f4eedf;
+    }
+
+    .status.approved {
+      color: var(--green);
+      border-color: var(--green);
+      background: var(--green-light);
+    }
+
+    .status.rejected {
+      color: var(--red);
+      border-color: var(--red);
+      background: #f3e5e2;
+    }
+
+    .submission-box {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .history-list {
       display: grid;
       gap: 10px;
     }
 
-    .task-card {
-      display: grid;
-      grid-template-columns: 52px 1fr auto;
-      align-items: center;
-      gap: 16px;
-      padding: 17px 18px;
-      border: 1px solid var(--line);
-      background: var(--panel);
+    .history-item {
+      border-left: 3px solid var(--green);
+      padding: 10px 14px;
+      background: rgba(240, 242, 237, 0.7);
+      font-size: 13px;
     }
 
-    .task-number {
-      width: 38px;
-      height: 38px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      color: var(--accent);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 17px;
-    }
-
-    .task-title {
-      font-size: 14px;
-      font-weight: 800;
-      margin-bottom: 5px;
-    }
-
-    .task-desc {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .status {
-      padding: 6px 9px;
-      border: 1px solid var(--line);
-      font-size: 11px;
-      white-space: nowrap;
-    }
-
-    .status.approved {
-      color: var(--accent);
-      border-color: #8db9ae;
-      background: #eef7f3;
-    }
-
-    .status.pending {
-      color: var(--warning);
-      border-color: #d6c39b;
-      background: #faf5e8;
-    }
-
-    .status.rejected {
-      color: var(--danger);
-      border-color: #d7aaa8;
-      background: #fbf1f0;
-    }
-
-    .status.none {
-      color: var(--muted);
-      background: #fafafa;
-    }
-
-    .submission-box {
-      padding: 22px;
-      border: 1px dashed var(--line);
-      background: rgba(255, 255, 255, 0.55);
-    }
-
-    .field {
-      margin-bottom: 15px;
-    }
-
-    .field:last-child {
-      margin-bottom: 0;
-    }
-
-    .field-label {
-      display: block;
-      margin-bottom: 7px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .select,
-    .textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--ink);
-      padding: 11px 12px;
-      outline: none;
-    }
-
-    .textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .file-input {
-      width: 100%;
-      padding: 11px;
-      border: 1px dashed var(--line);
-      background: #fff;
-    }
-
-    .lottery-box {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .lottery-card {
-      padding: 22px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-    }
-
-    .lottery-title {
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .lottery-text {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
+    .history-item strong {
+      color: var(--green);
     }
 
     .empty {
-      padding: 24px;
-      border: 1px dashed var(--line);
       color: var(--muted);
       font-size: 13px;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.5);
+      padding: 12px 0;
     }
 
-    .footer {
-      padding-top: 28px;
-      border-top: 1px solid var(--line);
+    .loading {
       color: var(--muted);
-      font-size: 11px;
-      line-height: 1.7;
+      font-size: 13px;
     }
 
-    @media (max-width: 760px) {
-      .hero {
-        grid-template-columns: 1fr;
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 20px, 1080px);
+        padding-top: 16px;
       }
 
-      .case-stamp {
-        justify-self: start;
-        width: 140px;
-        height: 140px;
+      .case-header,
+      .panel {
+        padding: 20px;
       }
 
-      .case-stamp-inner {
-        width: 108px;
-        height: 108px;
-      }
-
-      .form-row {
-        flex-direction: column;
+      .stamp {
+        position: static;
+        display: inline-block;
+        margin-bottom: 18px;
+        transform: rotate(-3deg);
       }
 
       .stats {
         grid-template-columns: 1fr;
       }
 
-      .task-card {
-        grid-template-columns: 42px 1fr;
-      }
-
-      .task-card .status {
-        grid-column: 2;
-        justify-self: start;
-      }
-
-      .lottery-box {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        align-items: flex-start;
-      }
-
-      .nav {
-        display: none;
+      .task-head {
+        flex-direction: column;
       }
     }
   </style>
@@ -612,1284 +432,711 @@
 <body>
   <main class="page">
 
-    <header class="topbar">
-      <a href="../index.html" class="brand">
-        <div class="brand-mark">M</div>
-
-        <div class="brand-text">
-          <div class="brand-name">MAVEN 概念侦探社</div>
-          <div class="brand-sub">CASE INVESTIGATION UNIT</div>
-        </div>
-      </a>
-
-      <nav class="nav">
-        <a href="../index.html">活动首页</a>
-        <a href="#tasks">我的案件</a>
-      </nav>
-    </header>
-
-
-    <section class="hero">
-
-      <div>
-        <div class="eyebrow">CASE FILE / MY CASE</div>
-
-        <h1>
-          我的<br />
-          案件。
-        </h1>
-
-        <p class="hero-desc">
-          六条线索，逐项完成。每项任务通过审核后，
-          立即获得一次每日随机抽奖机会。
-          六项全部完成后，额外参加结案大奖抽奖。
-        </p>
-      </div>
-
-      <div class="case-stamp">
-        <div class="case-stamp-inner">
-          <div class="case-stamp-small">MAVEN</div>
-          <div class="case-stamp-big">CASE</div>
-          <div class="case-stamp-small">FILE / 01</div>
-        </div>
-      </div>
-
-    </section>
-
-
-    <!-- 登录区域 -->
-
-    <section class="panel login-panel" id="loginPanel">
-
-      <div class="panel-header">
-        <div>
-          <div class="panel-label">IDENTITY CHECK</div>
-          <div class="panel-title">使用学校邮箱登录</div>
-        </div>
-
-        <div class="panel-label">STEP 01</div>
-      </div>
-
-      <div class="panel-body">
-
-        <div class="login-copy">
-          使用你的 CUHK-Shenzhen 学校邮箱登录。
-          我们会向邮箱发送一个 6 位验证码，不需要设置密码。
-        </div>
-
-
-        <div id="emailStep">
-
-          <div class="form-row">
-
-            <input
-              id="emailInput"
-              class="input"
-              type="email"
-              placeholder="name@cuhk.edu.cn"
-              autocomplete="email"
-            />
-
-            <button
-              id="sendCodeBtn"
-              class="btn"
-              type="button"
-            >
-              获取登录验证码
-            </button>
-
-          </div>
-
-          <div class="hint">
-            仅支持 @cuhk.edu.cn 学校邮箱。
-          </div>
-
-        </div>
-
-
-        <div id="otpStep" style="display:none;">
-
-          <div class="form-row">
-
-            <input
-              id="otpInput"
-              class="input"
-              type="text"
-              inputmode="numeric"
-              autocomplete="one-time-code"
-              maxlength="6"
-              placeholder="输入 6 位验证码"
-            />
-
-            <button
-              id="verifyCodeBtn"
-              class="btn"
-              type="button"
-            >
-              验证并登录
-            </button>
-
-          </div>
-
-          <div class="hint">
-            验证码已经发送到你的学校邮箱。
-            如果没有收到，请检查垃圾邮件。
-          </div>
-
-          <button
-            id="changeEmailBtn"
-            class="btn secondary"
-            type="button"
-            style="margin-top:12px;"
-          >
-            更换邮箱
-          </button>
-
-        </div>
-
-
-        <div id="loginMessage" class="message"></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- 登录后的用户信息 -->
-
-    <div id="userBar" class="user-bar">
-
-      <div>
-        <div class="user-info-label">CURRENT INVESTIGATOR</div>
-        <div id="userEmail" class="user-email"></div>
-      </div>
-
-      <button
-        id="logoutBtn"
-        class="btn secondary"
-        type="button"
-      >
-        退出登录
-      </button>
-
+    <div class="topbar">
+      <div class="brand">MAVEN · CASE FILE</div>
+      <a class="back-link" href="../index.html">← 返回活动主页</a>
     </div>
 
-
-    <!-- 登录后的案件页面 -->
-
-    <section id="dashboard" class="dashboard">
-
-      <div class="stats">
-
-        <div class="stat">
-          <div class="stat-label">已通过任务</div>
-          <div id="approvedCount" class="stat-value">0 / 6</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-label">每日抽奖机会</div>
-          <div id="dailyCredits" class="stat-value">0</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-label">结案大奖资格</div>
-          <div id="grandStatus" class="stat-value">未获得</div>
-        </div>
-
-      </div>
-
-
-      <!-- 任务 -->
-
-      <section class="section" id="tasks">
-
-        <div class="section-heading">
-          <h2>六条线索</h2>
-          <span>CASE EVIDENCE / 01–06</span>
-        </div>
-
-        <div id="taskList" class="tasks">
-
-          <div class="empty">
-            正在读取案件记录……
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- 提交 -->
-
-      <section class="section">
-
-        <div class="section-heading">
-          <h2>提交证据</h2>
-          <span>SUBMIT EVIDENCE</span>
-        </div>
-
-        <div class="submission-box">
-
-          <div class="field">
-
-            <label class="field-label" for="taskSelect">
-              选择任务
-            </label>
-
-            <select id="taskSelect" class="select">
-              <option value="">请选择一项任务</option>
-            </select>
-
-          </div>
-
-
-          <div class="field">
-
-            <label class="field-label" for="screenshotInput">
-              学习结果截图
-            </label>
-
-            <input
-              id="screenshotInput"
-              class="file-input"
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-            />
-
-            <div class="hint">
-              请上传能够证明任务完成的截图。
-            </div>
-
-          </div>
-
-
-          <div class="field">
-
-            <label class="field-label" for="noteInput">
-              备注（可选）
-            </label>
-
-            <textarea
-              id="noteInput"
-              class="textarea"
-              placeholder="如果需要，可以补充说明。"
-            ></textarea>
-
-          </div>
-
-
-          <button
-            id="submitEvidenceBtn"
-            class="btn"
-            type="button"
-          >
-            提交审核
-          </button>
-
-          <div id="submissionMessage" class="message"></div>
-
-        </div>
-
-      </section>
-
-
-      <!-- 抽奖 -->
-
-      <section class="section">
-
-        <div class="section-heading">
-          <h2>奖励记录</h2>
-          <span>REWARD RECORD</span>
-        </div>
-
-        <div class="lottery-box">
-
-          <div class="lottery-card">
-
-            <div class="lottery-title">
-              每日随机抽奖
-            </div>
-
-            <div class="lottery-text">
-              每完成一项任务并通过审核，
-              立即获得一次每日随机抽奖机会。
-            </div>
-
-            <button
-              id="dailyLotteryBtn"
-              class="btn"
-              type="button"
-              disabled
-              style="margin-top:16px;"
-            >
-              暂未获得抽奖机会
-            </button>
-
-          </div>
-
-
-          <div class="lottery-card">
-
-            <div class="lottery-title">
-              结案大奖
-            </div>
-
-            <div class="lottery-text">
-              六项任务全部通过审核后，
-              获得一次结案大奖抽奖资格。
-            </div>
-
-            <button
-              id="grandLotteryBtn"
-              class="btn"
-              type="button"
-              disabled
-              style="margin-top:16px;"
-            >
-              尚未获得资格
-            </button>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- 抽奖历史 -->
-
-      <section class="section">
-
-        <div class="section-heading">
-          <h2>抽奖历史</h2>
-          <span>LOTTERY HISTORY</span>
-        </div>
-
-        <div id="lotteryHistory" class="empty">
-          暂无抽奖记录。
-        </div>
-
-      </section>
-
+    <section class="case-header">
+      <div class="stamp">CONFIDENTIAL · STUDENT FILE</div>
+      <div class="case-label">CASE FILE / MY CASE</div>
+      <h1>我的案件</h1>
+      <p class="header-description">
+        完成 Maven 课程任务，上传截图作为线索，等待审核。
+        每完成 1 项任务并通过审核，即获得 1 次每日抽奖机会；
+        六项全部完成后，额外获得结案大奖抽奖资格。
+      </p>
     </section>
 
+    <!-- 登录 -->
+    <section id="loginSection" class="panel login-panel">
+      <h2 class="panel-title">01 · 身份确认</h2>
 
-    <footer class="footer">
-      MAVEN 概念侦探社 · CASE FILE / MY CASE
-      <br />
-      活动时间、最终名额、提交与领取安排以课程群通知为准。
-    </footer>
+      <div id="emailStep">
+        <div class="field">
+          <label class="field-label" for="email">学校邮箱</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="name@link.cuhk.edu.cn"
+            autocomplete="email"
+          />
+          <p class="hint">
+            仅支持 @link.cuhk.edu.cn 学校邮箱。
+          </p>
+        </div>
+
+        <div class="button-row">
+          <button id="sendOtpBtn" type="button">
+            获取登录验证码
+          </button>
+        </div>
+      </div>
+
+      <div id="otpStep" class="hidden">
+        <div class="field">
+          <label class="field-label" for="otp">登录验证码</label>
+          <input
+            id="otp"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="请输入 6 位验证码"
+            autocomplete="one-time-code"
+          />
+          <p class="hint">
+            验证码已发送到你的学校邮箱。
+          </p>
+        </div>
+
+        <div class="button-row">
+          <button id="verifyOtpBtn" type="button">
+            登录
+          </button>
+
+          <button id="backToEmailBtn" class="secondary" type="button">
+            返回修改邮箱
+          </button>
+        </div>
+      </div>
+
+      <div id="loginMessage" class="message"></div>
+    </section>
+
+    <!-- 用户案件 -->
+    <section id="dashboardSection" class="hidden">
+
+      <div class="panel">
+        <div class="user-bar">
+          <div>
+            <div class="case-label">CURRENT INVESTIGATOR</div>
+            <div id="userEmail" class="user-email"></div>
+          </div>
+
+          <button id="logoutBtn" class="danger" type="button">
+            退出登录
+          </button>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">已通过任务</div>
+            <div id="approvedCount" class="stat-value">0 / 6</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">每日抽奖机会</div>
+            <div id="dailyCredits" class="stat-value">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">结案大奖资格</div>
+            <div id="grandEligibility" class="stat-value">—</div>
+          </div>
+        </div>
+
+        <h2 class="panel-title">02 · 案件任务</h2>
+
+        <div id="taskList" class="task-list">
+          <div class="loading">正在读取案件资料……</div>
+        </div>
+
+        <div id="dashboardMessage" class="message"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel-title">03 · 抽奖记录</h2>
+
+        <div id="lotteryHistory" class="history-list">
+          <div class="empty">暂无抽奖记录。</div>
+        </div>
+      </div>
+
+    </section>
 
   </main>
 
-
   <script>
-    // ============================================
-    // Supabase 初始化
-    // ============================================
+    const config = window.SUPABASE_CONFIG || {};
 
-    if (
-      !window.SUPABASE_CONFIG ||
-      !window.SUPABASE_CONFIG.url ||
-      !window.SUPABASE_CONFIG.publishableKey
-    ) {
+    if (!config.url || !config.publishableKey) {
       throw new Error("Supabase configuration is missing.");
     }
 
-    const {
-      createClient
-    } = window.supabase;
-
-    const supabaseClient = createClient(
-      window.SUPABASE_CONFIG.url,
-      window.SUPABASE_CONFIG.publishableKey
+    const supabase = window.supabase.createClient(
+      config.url,
+      config.publishableKey
     );
 
+    let currentUser = null;
+    let tasks = [];
+    let submissions = [];
+    let rewards = null;
 
-    // ============================================
-    // DOM
-    // ============================================
+    const loginSection = document.getElementById("loginSection");
+    const dashboardSection = document.getElementById("dashboardSection");
 
-    const loginPanel = document.getElementById("loginPanel");
     const emailStep = document.getElementById("emailStep");
     const otpStep = document.getElementById("otpStep");
 
-    const emailInput = document.getElementById("emailInput");
-    const otpInput = document.getElementById("otpInput");
+    const emailInput = document.getElementById("email");
+    const otpInput = document.getElementById("otp");
 
-    const sendCodeBtn = document.getElementById("sendCodeBtn");
-    const verifyCodeBtn = document.getElementById("verifyCodeBtn");
-    const changeEmailBtn = document.getElementById("changeEmailBtn");
+    const sendOtpBtn = document.getElementById("sendOtpBtn");
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+    const backToEmailBtn = document.getElementById("backToEmailBtn");
     const logoutBtn = document.getElementById("logoutBtn");
 
     const loginMessage = document.getElementById("loginMessage");
+    const dashboardMessage = document.getElementById("dashboardMessage");
 
-    const userBar = document.getElementById("userBar");
     const userEmail = document.getElementById("userEmail");
-
-    const dashboard = document.getElementById("dashboard");
-
     const approvedCount = document.getElementById("approvedCount");
     const dailyCredits = document.getElementById("dailyCredits");
-    const grandStatus = document.getElementById("grandStatus");
+    const grandEligibility = document.getElementById("grandEligibility");
 
     const taskList = document.getElementById("taskList");
-    const taskSelect = document.getElementById("taskSelect");
+    const lotteryHistory = document.getElementById("lotteryHistory");
 
-    const screenshotInput =
-      document.getElementById("screenshotInput");
-
-    const noteInput =
-      document.getElementById("noteInput");
-
-    const submitEvidenceBtn =
-      document.getElementById("submitEvidenceBtn");
-
-    const submissionMessage =
-      document.getElementById("submissionMessage");
-
-    const dailyLotteryBtn =
-      document.getElementById("dailyLotteryBtn");
-
-    const grandLotteryBtn =
-      document.getElementById("grandLotteryBtn");
-
-    const lotteryHistory =
-      document.getElementById("lotteryHistory");
-
-
-    let currentUser = null;
-
-
-    // ============================================
-    // 消息
-    // ============================================
-
-    function showMessage(element, text, type = "success") {
-      element.textContent = text;
-      element.className = "message show " + type;
+    function showMessage(element, message, isError = false) {
+      element.textContent = message;
+      element.classList.add("show");
+      element.classList.toggle("error", isError);
     }
 
-
-    function clearMessage(element) {
+    function hideMessage(element) {
       element.textContent = "";
-      element.className = "message";
+      element.classList.remove("show", "error");
     }
-
-
-    // ============================================
-    // 邮箱检查
-    // ============================================
 
     function isSchoolEmail(email) {
-      return /^[^\s@]+@cuhk\.edu\.cn$/i.test(email.trim());
+      return /^[^\s@]+@link\.cuhk\.edu\.cn$/i.test(email.trim());
     }
-
-
-    // ============================================
-    // 发送验证码
-    // ============================================
-
-    sendCodeBtn.addEventListener("click", async () => {
-
-      clearMessage(loginMessage);
-
-      const email = emailInput.value.trim().toLowerCase();
-
-      if (!isSchoolEmail(email)) {
-
-        showMessage(
-          loginMessage,
-          "请输入有效的 CUHK-Shenzhen 学校邮箱（@cuhk.edu.cn）。",
-          "error"
-        );
-
-        return;
-      }
-
-
-      sendCodeBtn.disabled = true;
-      sendCodeBtn.textContent = "发送中……";
-
-
-      try {
-
-        const {
-          error
-        } = await supabaseClient.auth.signInWithOtp({
-          email: email,
-          options: {
-            shouldCreateUser: true
-          }
-        });
-
-
-        if (error) {
-          throw error;
-        }
-
-
-        emailStep.style.display = "none";
-        otpStep.style.display = "block";
-
-        showMessage(
-          loginMessage,
-          "验证码已经发送到你的学校邮箱，请查收邮件。",
-          "success"
-        );
-
-        otpInput.focus();
-
-      } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-          loginMessage,
-          "验证码发送失败：" + error.message,
-          "error"
-        );
-
-      } finally {
-
-        sendCodeBtn.disabled = false;
-        sendCodeBtn.textContent = "获取登录验证码";
-
-      }
-
-    });
-
-
-    // ============================================
-    // 验证 OTP
-    // ============================================
-
-    verifyCodeBtn.addEventListener("click", async () => {
-
-      clearMessage(loginMessage);
-
-      const email = emailInput.value.trim().toLowerCase();
-      const token = otpInput.value.trim();
-
-
-      if (!isSchoolEmail(email)) {
-
-        showMessage(
-          loginMessage,
-          "学校邮箱格式不正确。",
-          "error"
-        );
-
-        return;
-      }
-
-
-      if (!/^\d{6}$/.test(token)) {
-
-        showMessage(
-          loginMessage,
-          "请输入 6 位验证码。",
-          "error"
-        );
-
-        return;
-      }
-
-
-      verifyCodeBtn.disabled = true;
-      verifyCodeBtn.textContent = "验证中……";
-
-
-      try {
-
-        const {
-          data,
-          error
-        } = await supabaseClient.auth.verifyOtp({
-          email: email,
-          token: token,
-          type: "email"
-        });
-
-
-        if (error) {
-          throw error;
-        }
-
-
-        currentUser = data.user;
-
-        showMessage(
-          loginMessage,
-          "登录成功，正在打开你的案件……",
-          "success"
-        );
-
-        await loadUserDashboard();
-
-      } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-          loginMessage,
-          "验证码验证失败：" + error.message,
-          "error"
-        );
-
-      } finally {
-
-        verifyCodeBtn.disabled = false;
-        verifyCodeBtn.textContent = "验证并登录";
-
-      }
-
-    });
-
-
-    // ============================================
-    // 更换邮箱
-    // ============================================
-
-    changeEmailBtn.addEventListener("click", () => {
-
-      otpInput.value = "";
-
-      otpStep.style.display = "none";
-      emailStep.style.display = "block";
-
-      clearMessage(loginMessage);
-
-      emailInput.focus();
-
-    });
-
-
-    // ============================================
-    // 退出
-    // ============================================
-
-    logoutBtn.addEventListener("click", async () => {
-
-      const {
-        error
-      } = await supabaseClient.auth.signOut();
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      currentUser = null;
-
-      dashboard.classList.remove("show");
-      userBar.classList.remove("show");
-
-      loginPanel.style.display = "block";
-
-      emailStep.style.display = "block";
-      otpStep.style.display = "none";
-
-      emailInput.value = "";
-      otpInput.value = "";
-
-      clearMessage(loginMessage);
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-    });
-
-
-    // ============================================
-    // 登录状态
-    // ============================================
-
-    async function checkExistingSession() {
-
-      const {
-        data,
-        error
-      } = await supabaseClient.auth.getSession();
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      if (data.session && data.session.user) {
-
-        currentUser = data.session.user;
-
-        await loadUserDashboard();
-
-      }
-
-    }
-
-
-    // ============================================
-    // 读取案件数据
-    // ============================================
-
-    async function loadUserDashboard() {
-
-      if (!currentUser) {
-        return;
-      }
-
-
-      loginPanel.style.display = "none";
-
-      userBar.classList.add("show");
-
-      dashboard.classList.add("show");
-
-      userEmail.textContent =
-        currentUser.email || "学校邮箱";
-
-
-      await Promise.all([
-        loadTasks(),
-        loadRewards(),
-        loadLotteryHistory()
-      ]);
-
-    }
-
-
-    // ============================================
-    // 读取任务
-    // ============================================
-
-    async function loadTasks() {
-
-      const {
-        data: tasks,
-        error: tasksError
-      } = await supabaseClient
-        .from("tasks")
-        .select("*")
-        .order("task_order", {
-          ascending: true
-        });
-
-
-      if (tasksError) {
-
-        console.error(tasksError);
-
-        taskList.innerHTML = `
-          <div class="empty">
-            暂时无法读取案件记录。
-          </div>
-        `;
-
-        return;
-      }
-
-
-      const {
-        data: submissions,
-        error: submissionsError
-      } = await supabaseClient
-        .from("submissions")
-        .select("*")
-        .eq("user_id", currentUser.id);
-
-
-      if (submissionsError) {
-
-        console.error(submissionsError);
-
-        taskList.innerHTML = `
-          <div class="empty">
-            暂时无法读取审核记录。
-          </div>
-        `;
-
-        return;
-      }
-
-
-      const latestByTask = {};
-
-      submissions.forEach((submission) => {
-
-        const existing =
-          latestByTask[submission.task_id];
-
-        if (
-          !existing ||
-          new Date(submission.submitted_at) >
-          new Date(existing.submitted_at)
-        ) {
-          latestByTask[submission.task_id] = submission;
-        }
-
-      });
-
-
-      taskList.innerHTML = "";
-
-      taskSelect.innerHTML = `
-        <option value="">请选择一项任务</option>
-      `;
-
-
-      tasks.forEach((task) => {
-
-        const submission =
-          latestByTask[task.id];
-
-
-        let statusClass = "none";
-        let statusText = "未提交";
-
-
-        if (submission) {
-
-          if (submission.status === "approved") {
-
-            statusClass = "approved";
-            statusText = "审核通过";
-
-          } else if (submission.status === "pending") {
-
-            statusClass = "pending";
-            statusText = "审核中";
-
-          } else if (submission.status === "rejected") {
-
-            statusClass = "rejected";
-            statusText = "需要重新提交";
-
-          }
-
-        }
-
-
-        const card = document.createElement("div");
-
-        card.className = "task-card";
-
-        card.innerHTML = `
-          <div class="task-number">
-            ${String(task.task_order).padStart(2, "0")}
-          </div>
-
-          <div>
-            <div class="task-title">
-              ${escapeHtml(task.title)}
-            </div>
-
-            <div class="task-desc">
-              ${escapeHtml(task.short_description)}
-            </div>
-          </div>
-
-          <div class="status ${statusClass}">
-            ${statusText}
-          </div>
-        `;
-
-
-        taskList.appendChild(card);
-
-
-        const option = document.createElement("option");
-
-        option.value = task.id;
-
-        option.textContent =
-          String(task.task_order).padStart(2, "0") +
-          " · " +
-          task.title;
-
-
-        if (
-          submission &&
-          submission.status === "approved"
-        ) {
-          option.disabled = true;
-          option.textContent += " · 已完成";
-        }
-
-
-        taskSelect.appendChild(option);
-
-      });
-
-    }
-
-
-    // ============================================
-    // 读取奖励
-    // ============================================
-
-    async function loadRewards() {
-
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from("user_rewards")
-        .select("*")
-        .eq("user_id", currentUser.id)
-        .maybeSingle();
-
-
-      if (error) {
-
-        console.error(error);
-        return;
-
-      }
-
-
-      if (!data) {
-        return;
-      }
-
-
-      approvedCount.textContent =
-        `${data.approved_task_count} / 6`;
-
-
-      dailyCredits.textContent =
-        data.daily_lottery_credits;
-
-
-      if (data.grand_lottery_eligible) {
-
-        grandStatus.textContent = "已获得";
-
-        grandLotteryBtn.disabled = false;
-
-        grandLotteryBtn.textContent =
-          "参加结案大奖抽奖";
-
-      } else {
-
-        grandStatus.textContent = "未获得";
-
-        grandLotteryBtn.disabled = true;
-
-        grandLotteryBtn.textContent =
-          "尚未获得资格";
-
-      }
-
-
-      if (data.daily_lottery_credits > 0) {
-
-        dailyLotteryBtn.disabled = false;
-
-        dailyLotteryBtn.textContent =
-          `立即抽奖（${data.daily_lottery_credits} 次）`;
-
-      } else {
-
-        dailyLotteryBtn.disabled = true;
-
-        dailyLotteryBtn.textContent =
-          "暂未获得抽奖机会";
-
-      }
-
-    }
-
-
-    // ============================================
-    // 读取抽奖历史
-    // ============================================
-
-    async function loadLotteryHistory() {
-
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from("lottery_draws")
-        .select(`
-          id,
-          draw_type,
-          result_name,
-          created_at
-        `)
-        .eq("user_id", currentUser.id)
-        .order("created_at", {
-          ascending: false
-        });
-
-
-      if (error) {
-
-        console.error(error);
-
-        lotteryHistory.textContent =
-          "暂时无法读取抽奖记录。";
-
-        return;
-
-      }
-
-
-      if (!data || data.length === 0) {
-
-        lotteryHistory.textContent =
-          "暂无抽奖记录。";
-
-        return;
-
-      }
-
-
-      lotteryHistory.innerHTML =
-        data.map((item) => {
-
-          const date =
-            new Date(item.created_at)
-              .toLocaleString("zh-CN");
-
-          const type =
-            item.draw_type === "grand"
-              ? "结案大奖"
-              : "每日随机礼";
-
-
-          return `
-            <div
-              style="
-                display:flex;
-                justify-content:space-between;
-                gap:16px;
-                padding:12px 0;
-                border-bottom:1px solid var(--line);
-              "
-            >
-              <span>
-                ${escapeHtml(type)}
-                ·
-                ${escapeHtml(item.result_name)}
-              </span>
-
-              <span style="color:var(--muted);font-size:11px;">
-                ${escapeHtml(date)}
-              </span>
-            </div>
-          `;
-
-        }).join("");
-
-    }
-
-
-    // ============================================
-    // 提交证据
-    // ============================================
-
-    submitEvidenceBtn.addEventListener(
-      "click",
-      async () => {
-
-        clearMessage(submissionMessage);
-
-        if (!currentUser) {
-
-          showMessage(
-            submissionMessage,
-            "请先登录。",
-            "error"
-          );
-
-          return;
-        }
-
-
-        const taskId =
-          taskSelect.value;
-
-        const file =
-          screenshotInput.files[0];
-
-        const note =
-          noteInput.value.trim();
-
-
-        if (!taskId) {
-
-          showMessage(
-            submissionMessage,
-            "请选择要提交的任务。",
-            "error"
-          );
-
-          return;
-        }
-
-
-        if (!file) {
-
-          showMessage(
-            submissionMessage,
-            "请上传学习结果截图。",
-            "error"
-          );
-
-          return;
-        }
-
-
-        if (!file.type.startsWith("image/")) {
-
-          showMessage(
-            submissionMessage,
-            "目前只支持图片格式。",
-            "error"
-          );
-
-          return;
-        }
-
-
-        submitEvidenceBtn.disabled = true;
-        submitEvidenceBtn.textContent = "提交中……";
-
-
-        try {
-
-          const extension =
-            file.name.split(".").pop().toLowerCase();
-
-          const fileName =
-            `${crypto.randomUUID()}.${extension}`;
-
-          const filePath =
-            `${currentUser.id}/${fileName}`;
-
-
-          const {
-            error: uploadError
-          } = await supabaseClient
-            .storage
-            .from("maven-submissions")
-            .upload(
-              filePath,
-              file,
-              {
-                cacheControl: "3600",
-                upsert: false
-              }
-            );
-
-
-          if (uploadError) {
-            throw uploadError;
-          }
-
-
-          const {
-            error: submissionError
-          } = await supabaseClient
-            .from("submissions")
-            .insert({
-              user_id: currentUser.id,
-              task_id: Number(taskId),
-              screenshot_path: filePath,
-              note: note || null
-            });
-
-
-          if (submissionError) {
-            throw submissionError;
-          }
-
-
-          screenshotInput.value = "";
-          noteInput.value = "";
-          taskSelect.value = "";
-
-
-          showMessage(
-            submissionMessage,
-            "提交成功！你的学习结果已经进入人工审核。",
-            "success"
-          );
-
-
-          await loadTasks();
-
-
-        } catch (error) {
-
-          console.error(error);
-
-          showMessage(
-            submissionMessage,
-            "提交失败：" + error.message,
-            "error"
-          );
-
-        } finally {
-
-          submitEvidenceBtn.disabled = false;
-          submitEvidenceBtn.textContent = "提交审核";
-
-        }
-
-      }
-    );
-
-
-    // ============================================
-    // HTML 安全处理
-    // ============================================
 
     function escapeHtml(value) {
-
-      return String(value)
+      return String(value ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
-
     }
 
+    function getSubmissionForTask(taskId) {
+      return submissions.find(
+        (submission) => Number(submission.task_id) === Number(taskId)
+      );
+    }
 
-    // ============================================
-    // 监听登录状态变化
-    // ============================================
+    function statusText(status) {
+      if (status === "approved") return "已通过";
+      if (status === "rejected") return "需重新提交";
+      if (status === "pending") return "审核中";
+      return "未提交";
+    }
 
-    supabaseClient.auth.onAuthStateChange(
-      async (event, session) => {
+    function renderStats() {
+      const count = rewards?.approved_task_count ?? 0;
+      const credits = rewards?.daily_lottery_credits ?? 0;
+      const eligible = rewards?.grand_lottery_eligible ?? false;
 
-        if (session && session.user) {
+      approvedCount.textContent = `${count} / 6`;
+      dailyCredits.textContent = String(credits);
+      grandEligibility.textContent = eligible ? "已获得" : "未获得";
+    }
 
-          currentUser = session.user;
+    function renderTasks() {
+      if (!tasks.length) {
+        taskList.innerHTML = `
+          <div class="empty">
+            暂时没有可用任务。
+          </div>
+        `;
+        return;
+      }
 
-          await loadUserDashboard();
+      taskList.innerHTML = tasks
+        .sort((a, b) => Number(a.task_order) - Number(b.task_order))
+        .map((task) => {
+          const submission = getSubmissionForTask(task.id);
+          const status = submission?.status || "unsubmitted";
 
-        } else {
+          let submissionHtml = "";
 
-          currentUser = null;
+          if (status === "approved") {
+            submissionHtml = `
+              <div class="submission-box">
+                <div class="hint">
+                  本任务已经通过审核。该任务只计入一次。
+                </div>
+              </div>
+            `;
+          } else if (status === "pending") {
+            submissionHtml = `
+              <div class="submission-box">
+                <div class="hint">
+                  你的证据已经提交，目前正在等待审核。
+                </div>
+              </div>
+            `;
+          } else {
+            const rejectedNote = submission?.review_note
+              ? `
+                <div class="message show error">
+                  审核意见：${escapeHtml(submission.review_note)}
+                </div>
+              `
+              : "";
 
+            submissionHtml = `
+              <div class="submission-box">
+                ${rejectedNote}
+
+                <div class="field">
+                  <label class="field-label">
+                    上传截图
+                  </label>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    data-file-input="${task.id}"
+                  />
+
+                  <p class="hint">
+                    请上传能够证明你完成任务的截图。
+                  </p>
+                </div>
+
+                <div class="field">
+                  <label class="field-label">
+                    补充说明（可选）
+                  </label>
+
+                  <textarea
+                    data-note-input="${task.id}"
+                    placeholder="如果截图需要补充说明，可以写在这里。"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="button"
+                  data-submit-task="${task.id}"
+                >
+                  提交审核
+                </button>
+              </div>
+            `;
+          }
+
+          return `
+            <article class="task">
+              <div class="task-head">
+                <div>
+                  <div class="task-number">
+                    TASK ${String(task.task_order).padStart(2, "0")}
+                  </div>
+
+                  <h3 class="task-title">
+                    ${escapeHtml(task.title)}
+                  </h3>
+
+                  <p class="task-description">
+                    ${escapeHtml(task.short_description)}
+                  </p>
+                </div>
+
+                <div class="status ${status === "unsubmitted" ? "" : status}">
+                  ${statusText(status)}
+                </div>
+              </div>
+
+              ${submissionHtml}
+            </article>
+          `;
+        })
+        .join("");
+
+      document.querySelectorAll("[data-submit-task]").forEach((button) => {
+        button.addEventListener("click", () => {
+          submitTask(Number(button.dataset.submitTask), button);
+        });
+      });
+    }
+
+    function renderLotteryHistory(draws) {
+      if (!draws.length) {
+        lotteryHistory.innerHTML = `
+          <div class="empty">
+            暂无抽奖记录。
+          </div>
+        `;
+        return;
+      }
+
+      lotteryHistory.innerHTML = draws
+        .map((draw) => {
+          const type =
+            draw.draw_type === "grand"
+              ? "结案大奖"
+              : "每日随机礼";
+
+          const time = draw.created_at
+            ? new Date(draw.created_at).toLocaleString("zh-CN")
+            : "";
+
+          return `
+            <div class="history-item">
+              <strong>${escapeHtml(type)}</strong>
+              · ${escapeHtml(draw.result_name)}
+              <div class="hint">${escapeHtml(time)}</div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    async function loadDashboard() {
+      if (!currentUser) return;
+
+      hideMessage(dashboardMessage);
+
+      const [
+        tasksResult,
+        submissionsResult,
+        rewardsResult,
+        drawsResult
+      ] = await Promise.all([
+        supabase
+          .from("tasks")
+          .select("*")
+          .order("task_order", { ascending: true }),
+
+        supabase
+          .from("submissions")
+          .select("*")
+          .eq("user_id", currentUser.id)
+          .order("submitted_at", { ascending: false }),
+
+        supabase
+          .from("user_rewards")
+          .select("*")
+          .eq("user_id", currentUser.id)
+          .maybeSingle(),
+
+        supabase
+          .from("lottery_draws")
+          .select("id, draw_type, result_name, created_at")
+          .eq("user_id", currentUser.id)
+          .order("created_at", { ascending: false })
+      ]);
+
+      if (tasksResult.error) {
+        throw tasksResult.error;
+      }
+
+      if (submissionsResult.error) {
+        throw submissionsResult.error;
+      }
+
+      if (rewardsResult.error) {
+        throw rewardsResult.error;
+      }
+
+      if (drawsResult.error) {
+        throw drawsResult.error;
+      }
+
+      tasks = tasksResult.data || [];
+      submissions = submissionsResult.data || [];
+      rewards = rewardsResult.data || null;
+
+      renderStats();
+      renderTasks();
+      renderLotteryHistory(drawsResult.data || []);
+    }
+
+    async function sendOtp() {
+      const email = emailInput.value.trim().toLowerCase();
+
+      hideMessage(loginMessage);
+
+      if (!isSchoolEmail(email)) {
+        showMessage(
+          loginMessage,
+          "请输入有效的 CUHK-Shenzhen 学校邮箱（@link.cuhk.edu.cn）。",
+          true
+        );
+        return;
+      }
+
+      sendOtpBtn.disabled = true;
+      sendOtpBtn.textContent = "正在发送……";
+
+      try {
+        const { error } = await supabase.auth.signInWithOtp({
+          email,
+          options: {
+            shouldCreateUser: true
+          }
+        });
+
+        if (error) {
+          throw error;
         }
 
+        emailInput.value = email;
+        emailStep.classList.add("hidden");
+        otpStep.classList.remove("hidden");
+
+        showMessage(
+          loginMessage,
+          "验证码已经发送到你的学校邮箱，请查收邮件。"
+        );
+      } catch (error) {
+        console.error(error);
+
+        showMessage(
+          loginMessage,
+          error.message || "验证码发送失败，请稍后再试。",
+          true
+        );
+      } finally {
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.textContent = "获取登录验证码";
       }
-    );
+    }
 
+    async function verifyOtp() {
+      const email = emailInput.value.trim().toLowerCase();
+      const token = otpInput.value.trim();
 
-    // ============================================
-    // 页面加载
-    // ============================================
+      hideMessage(loginMessage);
 
-    checkExistingSession();
+      if (!isSchoolEmail(email)) {
+        showMessage(
+          loginMessage,
+          "邮箱格式不正确。",
+          true
+        );
+        return;
+      }
 
+      if (!/^\d{6}$/.test(token)) {
+        showMessage(
+          loginMessage,
+          "请输入 6 位数字验证码。",
+          true
+        );
+        return;
+      }
+
+      verifyOtpBtn.disabled = true;
+      verifyOtpBtn.textContent = "正在登录……";
+
+      try {
+        const { data, error } = await supabase.auth.verifyOtp({
+          email,
+          token,
+          type: "email"
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        currentUser = data.user;
+
+        loginSection.classList.add("hidden");
+        dashboardSection.classList.remove("hidden");
+
+        userEmail.textContent = currentUser.email || email;
+
+        await loadDashboard();
+      } catch (error) {
+        console.error(error);
+
+        showMessage(
+          loginMessage,
+          error.message || "登录失败，请检查验证码。",
+          true
+        );
+      } finally {
+        verifyOtpBtn.disabled = false;
+        verifyOtpBtn.textContent = "登录";
+      }
+    }
+
+    async function submitTask(taskId, button) {
+      if (!currentUser) {
+        showMessage(
+          dashboardMessage,
+          "请先登录。",
+          true
+        );
+        return;
+      }
+
+      const fileInput = document.querySelector(
+        `[data-file-input="${taskId}"]`
+      );
+
+      const noteInput = document.querySelector(
+        `[data-note-input="${taskId}"]`
+      );
+
+      const file = fileInput?.files?.[0];
+      const note = noteInput?.value?.trim() || "";
+
+      hideMessage(dashboardMessage);
+
+      if (!file) {
+        showMessage(
+          dashboardMessage,
+          "请先选择截图。",
+          true
+        );
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        showMessage(
+          dashboardMessage,
+          "请上传图片格式的截图。",
+          true
+        );
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        showMessage(
+          dashboardMessage,
+          "截图不能超过 10MB。",
+          true
+        );
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "正在提交……";
+
+      try {
+        const extension =
+          file.name.split(".").pop()?.toLowerCase() || "png";
+
+        const safeExtension = extension.replace(
+          /[^a-z0-9]/g,
+          ""
+        ) || "png";
+
+        const filePath =
+          `${currentUser.id}/${taskId}/${crypto.randomUUID()}.${safeExtension}`;
+
+        const uploadResult = await supabase.storage
+          .from("maven-submissions")
+          .upload(filePath, file, {
+            cacheControl: "3600",
+            upsert: false
+          });
+
+        if (uploadResult.error) {
+          throw uploadResult.error;
+        }
+
+        const insertResult = await supabase
+          .from("submissions")
+          .insert({
+            user_id: currentUser.id,
+            task_id: taskId,
+            screenshot_path: filePath,
+            note
+          });
+
+        if (insertResult.error) {
+          throw insertResult.error;
+        }
+
+        showMessage(
+          dashboardMessage,
+          "证据提交成功，等待审核。"
+        );
+
+        await loadDashboard();
+      } catch (error) {
+        console.error(error);
+
+        showMessage(
+          dashboardMessage,
+          error.message || "提交失败，请稍后再试。",
+          true
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "提交审核";
+      }
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+
+      currentUser = null;
+      tasks = [];
+      submissions = [];
+      rewards = null;
+
+      dashboardSection.classList.add("hidden");
+      loginSection.classList.remove("hidden");
+
+      emailStep.classList.remove("hidden");
+      otpStep.classList.add("hidden");
+
+      otpInput.value = "";
+
+      hideMessage(loginMessage);
+      hideMessage(dashboardMessage);
+    }
+
+    async function initialize() {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+
+        if (error) {
+          throw error;
+        }
+
+        if (data.session?.user) {
+          currentUser = data.session.user;
+
+          loginSection.classList.add("hidden");
+          dashboardSection.classList.remove("hidden");
+
+          userEmail.textContent = currentUser.email || "";
+
+          await loadDashboard();
+        }
+      } catch (error) {
+        console.error(error);
+
+        showMessage(
+          loginMessage,
+          "无法读取登录状态，请刷新页面后重试。",
+          true
+        );
+      }
+    }
+
+    sendOtpBtn.addEventListener("click", sendOtp);
+    verifyOtpBtn.addEventListener("click", verifyOtp);
+    logoutBtn.addEventListener("click", logout);
+
+    backToEmailBtn.addEventListener("click", () => {
+      otpStep.classList.add("hidden");
+      emailStep.classList.remove("hidden");
+      otpInput.value = "";
+      hideMessage(loginMessage);
+    });
+
+    initialize();
   </script>
-
 </body>
 </html>
