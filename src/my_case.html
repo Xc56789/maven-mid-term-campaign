@@ -1,963 +1,1895 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-<meta charset="utf-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta
-    name="viewport"
-    content="width=device-width,initial-scale=1"
->
+  <title>我的案件｜Maven 概念侦探社</title>
 
-<meta name="color-scheme" content="light dark">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./supabase-config.js"></script>
 
-<title>我的案件｜Maven 概念侦探社</title>
+  <style>
+    :root {
+      --bg: #f7f5ed;
+      --ink: #173538;
+      --muted: #506365;
+      --accent: #0c7464;
+      --line: #b9cdc5;
+      --panel: #ffffff;
+      --secondary: #eef4f0;
+      --danger: #a94442;
+      --warning: #8a6d3b;
+      --shadow: 0 12px 35px rgba(23, 53, 56, 0.08);
+    }
 
-<style>
+    * {
+      box-sizing: border-box;
+    }
 
-:root {
-    --bg: #f7f5ed;
-    --ink: #173538;
-    --muted: #506365;
-    --accent: #0c7464;
-    --line: #b9cdc5;
-    --panel: #ffffff;
-    --secondary: #eef4f0;
-    --buttonink: #ffffff;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family:
+    body {
+      margin: 0;
+      background:
+        linear-gradient(
+          rgba(247, 245, 237, 0.92),
+          rgba(247, 245, 237, 0.92)
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 28px,
+          rgba(23, 53, 56, 0.025) 29px
+        );
+      color: var(--ink);
+      font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         "PingFang SC",
+        "Hiragino Sans GB",
         "Microsoft YaHei",
         sans-serif;
-    line-height: 1.7;
-}
-
-a {
-    color: inherit;
-}
-
-header {
-    width: min(1180px, calc(100% - 40px));
-    margin: 0 auto;
-    padding: 22px 0;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    border-bottom: 1px solid var(--line);
-}
-
-.brand {
-    font-weight: 800;
-    text-decoration: none;
-    letter-spacing: .03em;
-}
-
-nav {
-    display: flex;
-    gap: 22px;
-}
-
-nav a {
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 14px;
-}
-
-main {
-    width: min(920px, calc(100% - 40px));
-    margin: 0 auto;
-    padding: 60px 0 100px;
-}
-
-.case-header {
-    margin-bottom: 38px;
-}
-
-.audience {
-    margin: 0 0 8px;
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .12em;
-}
-
-h1 {
-    margin: 0 0 14px;
-    font-size: clamp(38px, 7vw, 64px);
-    line-height: 1.08;
-    letter-spacing: -.04em;
-}
-
-h2 {
-    margin: 0 0 14px;
-    font-size: 26px;
-}
-
-p {
-    margin: 0 0 14px;
-}
-
-.note {
-    color: var(--muted);
-    font-size: 14px;
-}
-
-
-/* 登录卡片 */
-
-.login-panel {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    padding: 32px;
-    margin-bottom: 28px;
-}
-
-.login-panel h2 {
-    margin-bottom: 8px;
-}
-
-.login-panel .intro {
-    color: var(--muted);
-    margin-bottom: 26px;
-}
-
-.field {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 7px;
-    font-weight: 700;
-    font-size: 14px;
-}
-
-input {
-    width: 100%;
-    min-height: 48px;
-
-    border: 1px solid var(--line);
-    background: var(--bg);
-
-    padding: 11px 13px;
-
-    font: inherit;
-    color: var(--ink);
-
-    border-radius: 0;
-}
-
-input:focus {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-}
-
-.primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 48px;
-    padding: 0 22px;
-
-    border: 0;
-    background: var(--accent);
-    color: var(--buttonink);
-
-    font: inherit;
-    font-weight: 800;
-
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.primary:hover {
-    opacity: .9;
-}
-
-.login-note {
-    margin-top: 18px;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-
-/* 案件进度 */
-
-.progress-panel {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    padding: 32px;
-    margin-bottom: 28px;
-}
-
-.progress-summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin: 24px 0 30px;
-}
-
-.summary-item {
-    background: var(--secondary);
-    border: 1px solid var(--line);
-    padding: 18px;
-}
-
-.summary-item small {
-    display: block;
-    color: var(--muted);
-    font-size: 12px;
-    margin-bottom: 4px;
-}
-
-.summary-item strong {
-    font-size: 22px;
-}
-
-
-/* 任务状态 */
-
-.task-list {
-    display: grid;
-    gap: 10px;
-}
-
-.task-row {
-    border: 1px solid var(--line);
-    padding: 17px 18px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-}
-
-.task-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.task-number {
-    font-weight: 900;
-    color: var(--accent);
-    font-variant-numeric: tabular-nums;
-}
-
-.task-title {
-    font-weight: 700;
-}
-
-.status {
-    flex-shrink: 0;
-
-    padding: 4px 9px;
-
-    font-size: 12px;
-    font-weight: 800;
-
-    border: 1px solid var(--line);
-    background: var(--secondary);
-}
-
-.status.pending {
-    background: #f3f1e6;
-}
-
-.status.approved {
-    background: #e5f1eb;
-}
-
-.status.rejected {
-    background: #f5e8e5;
-}
-
-
-/* 提交区域 */
-
-.submit-panel {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    padding: 32px;
-    margin-bottom: 28px;
-}
-
-.upload-box {
-    border: 2px dashed var(--line);
-    background: var(--bg);
-
-    min-height: 190px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-
-    padding: 25px;
-
-    margin: 12px 0 20px;
-
-    cursor: pointer;
-}
-
-.upload-box:hover {
-    border-color: var(--accent);
-}
-
-.upload-box input {
-    display: none;
-}
-
-.upload-content strong {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.upload-content span {
-    color: var(--muted);
-    font-size: 13px;
-}
-
-textarea {
-    width: 100%;
-    min-height: 100px;
-
-    border: 1px solid var(--line);
-    background: var(--bg);
-
-    padding: 12px;
-
-    font: inherit;
-    color: var(--ink);
-
-    resize: vertical;
-}
-
-textarea:focus {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-}
-
-
-/* 抽奖 */
-
-.lottery-panel {
-    background: var(--ink);
-    color: white;
-
-    padding: 32px;
-
-    margin-bottom: 28px;
-}
-
-.lottery-panel .audience {
-    color: #b9cdc5;
-}
-
-.lottery-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-
-    margin: 22px 0;
-}
-
-.lottery-card {
-    border: 1px solid rgba(255,255,255,.25);
-    padding: 20px;
-}
-
-.lottery-card small {
-    display: block;
-    opacity: .7;
-    margin-bottom: 5px;
-}
-
-.lottery-card strong {
-    font-size: 26px;
-}
-
-.lottery-button {
-    display: inline-flex;
-
-    min-height: 48px;
-    padding: 0 22px;
-
-    align-items: center;
-    justify-content: center;
-
-    background: white;
-    color: var(--ink);
-
-    text-decoration: none;
-
-    font-weight: 800;
-}
-
-
-/* 抽奖记录 */
-
-.history-panel {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    padding: 32px;
-}
-
-.history-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-
-    padding: 14px 0;
-
-    border-bottom: 1px solid var(--line);
-}
-
-.history-row:last-child {
-    border-bottom: 0;
-}
-
-.history-time {
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.history-result {
-    font-weight: 700;
-}
-
-
-/* 页脚 */
-
-footer {
-    width: min(920px, calc(100% - 40px));
-    margin: 0 auto;
-
-    padding: 30px 0 50px;
-
-    color: var(--muted);
-    font-size: 13px;
-
-    border-top: 1px solid var(--line);
-}
-
-
-/* 响应式 */
-
-@media (max-width: 700px) {
-
-    header {
-        align-items: flex-start;
-        gap: 14px;
-        flex-direction: column;
+      min-height: 100vh;
     }
 
-    nav {
-        flex-wrap: wrap;
-        gap: 12px 18px;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    main {
-        padding-top: 42px;
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
     }
 
-    .login-panel,
-    .progress-panel,
-    .submit-panel,
-    .history-panel,
-    .lottery-panel {
-        padding: 22px;
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 60px;
     }
 
-    .progress-summary {
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 10px 0 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--ink);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: var(--panel);
+    }
+
+    .brand-text {
+      line-height: 1.15;
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav a:hover {
+      color: var(--accent);
+    }
+
+    .hero {
+      padding: 62px 0 38px;
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 32px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 7vw, 78px);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      font-weight: 600;
+    }
+
+    .hero-desc {
+      margin: 20px 0 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .case-stamp {
+      justify-self: end;
+      width: 180px;
+      height: 180px;
+      border: 1px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-5deg);
+      color: var(--accent);
+      background: rgba(255, 255, 255, 0.42);
+      text-align: center;
+    }
+
+    .case-stamp-inner {
+      width: 138px;
+      height: 138px;
+      border: 1px dashed var(--accent);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .case-stamp-big {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 26px;
+    }
+
+    .case-stamp-small {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-title {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .panel-label {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .panel-body {
+      padding: 24px;
+    }
+
+    .login-panel {
+      max-width: 720px;
+      margin: 0 auto 32px;
+    }
+
+    .login-copy {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(12, 116, 100, 0.08);
+    }
+
+    .btn {
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.15s ease;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .btn.secondary:hover {
+      background: var(--secondary);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .hint {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .message {
+      display: none;
+      margin-top: 14px;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      background: var(--secondary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      border-color: #d7aaa8;
+      background: #fbf1f0;
+      color: var(--danger);
+    }
+
+    .message.success {
+      border-color: var(--line);
+      background: var(--secondary);
+      color: var(--ink);
+    }
+
+    .user-bar {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto 32px;
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      background: var(--secondary);
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .user-bar.show {
+      display: flex;
+    }
+
+    .user-info-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .user-email {
+      font-size: 14px;
+      font-weight: 700;
+      word-break: break-all;
+    }
+
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.show {
+      display: block;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .stat {
+      padding: 22px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 34px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      font-weight: 600;
+    }
+
+    .section-heading span {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .tasks {
+      display: grid;
+      gap: 10px;
+    }
+
+    .task-card {
+      display: grid;
+      grid-template-columns: 52px 1fr auto;
+      align-items: center;
+      gap: 16px;
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .task-number {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+    }
+
+    .task-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .task-desc {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .status {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .status.approved {
+      color: var(--accent);
+      border-color: #8db9ae;
+      background: #eef7f3;
+    }
+
+    .status.pending {
+      color: var(--warning);
+      border-color: #d6c39b;
+      background: #faf5e8;
+    }
+
+    .status.rejected {
+      color: var(--danger);
+      border-color: #d7aaa8;
+      background: #fbf1f0;
+    }
+
+    .status.none {
+      color: var(--muted);
+      background: #fafafa;
+    }
+
+    .submission-box {
+      padding: 22px;
+      border: 1px dashed var(--line);
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .select,
+    .textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    .textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .file-input {
+      width: 100%;
+      padding: 11px;
+      border: 1px dashed var(--line);
+      background: #fff;
+    }
+
+    .lottery-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .lottery-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .lottery-title {
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .lottery-text {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .empty {
+      padding: 24px;
+      border: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .footer {
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 760px) {
+      .hero {
         grid-template-columns: 1fr;
-    }
+      }
 
-    .lottery-grid {
+      .case-stamp {
+        justify-self: start;
+        width: 140px;
+        height: 140px;
+      }
+
+      .case-stamp-inner {
+        width: 108px;
+        height: 108px;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      .stats {
         grid-template-columns: 1fr;
-    }
+      }
 
-    .task-row {
+      .task-card {
+        grid-template-columns: 42px 1fr;
+      }
+
+      .task-card .status {
+        grid-column: 2;
+        justify-self: start;
+      }
+
+      .lottery-box {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
         align-items: flex-start;
-        flex-direction: column;
-    }
+      }
 
-    .history-row {
-        flex-direction: column;
-        gap: 3px;
+      .nav {
+        display: none;
+      }
     }
-}
-
-</style>
+  </style>
 </head>
 
-
 <body>
+  <main class="page">
 
-<header>
+    <header class="topbar">
+      <a href="../index.html" class="brand">
+        <div class="brand-mark">M</div>
 
-    <a class="brand" href="../index.html">
-        Maven 概念侦探社
-    </a>
+        <div class="brand-text">
+          <div class="brand-name">MAVEN 概念侦探社</div>
+          <div class="brand-sub">CASE INVESTIGATION UNIT</div>
+        </div>
+      </a>
 
-    <nav aria-label="页面导航">
-        <a href="../index.html#clues">任务</a>
-        <a href="../index.html#gifts">礼物</a>
-        <a href="../index.html#my-case">我的案件</a>
-    </nav>
-
-</header>
-
-
-<main>
-
-<section class="case-header">
-
-    <p class="audience">
-        CASE FILE / MY CASE
-    </p>
-
-    <h1>我的案件</h1>
-
-    <p class="note">
-        完成任务、提交学习结果，并查看你的审核与抽奖状态。
-    </p>
-
-</section>
+      <nav class="nav">
+        <a href="../index.html">活动首页</a>
+        <a href="#tasks">我的案件</a>
+      </nav>
+    </header>
 
 
-<!--
-    当前阶段：
-    先展示完整用户端结构。
-    真正的学校邮箱验证码登录将在后续接入。
--->
+    <section class="hero">
 
-<section class="login-panel">
+      <div>
+        <div class="eyebrow">CASE FILE / MY CASE</div>
 
-    <p class="audience">
-        SCHOOL ACCOUNT
-    </p>
+        <h1>
+          我的<br />
+          案件。
+        </h1>
 
-    <h2>使用学校邮箱登录</h2>
+        <p class="hero-desc">
+          六条线索，逐项完成。每项任务通过审核后，
+          立即获得一次每日随机抽奖机会。
+          六项全部完成后，额外参加结案大奖抽奖。
+        </p>
+      </div>
 
-    <p class="intro">
-        请使用你的学校邮箱进入活动。
-        登录后可以查看自己的任务审核状态、抽奖机会和抽奖记录。
-    </p>
+      <div class="case-stamp">
+        <div class="case-stamp-inner">
+          <div class="case-stamp-small">MAVEN</div>
+          <div class="case-stamp-big">CASE</div>
+          <div class="case-stamp-small">FILE / 01</div>
+        </div>
+      </div>
 
-
-    <div class="field">
-
-        <label for="school-email">
-            学校邮箱
-        </label>
-
-        <input
-            id="school-email"
-            type="email"
-            placeholder="例如：xxxx@cuhk.edu.cn"
-            autocomplete="email"
-        >
-
-    </div>
+    </section>
 
 
-    <button
-        class="primary"
-        type="button"
-        id="login-button"
-    >
-        获取登录验证码
-    </button>
+    <!-- 登录区域 -->
 
+    <section class="panel login-panel" id="loginPanel">
 
-    <p class="login-note">
-        目前为活动系统测试页面。
-        正式上线后，验证码将发送至你的学校邮箱。
-    </p>
-
-</section>
-
-
-<section class="progress-panel">
-
-    <p class="audience">
-        CASE STATUS
-    </p>
-
-    <h2>我的任务进度</h2>
-
-
-    <div class="progress-summary">
-
-        <div class="summary-item">
-            <small>已通过</small>
-            <strong>0 / 6</strong>
+      <div class="panel-header">
+        <div>
+          <div class="panel-label">IDENTITY CHECK</div>
+          <div class="panel-title">使用学校邮箱登录</div>
         </div>
 
-        <div class="summary-item">
-            <small>每日抽奖机会</small>
-            <strong>0 次</strong>
-        </div>
+        <div class="panel-label">STEP 01</div>
+      </div>
 
-        <div class="summary-item">
-            <small>大奖抽奖资格</small>
-            <strong>未获得</strong>
-        </div>
+      <div class="panel-body">
 
-    </div>
-
-
-    <div class="task-list">
-
-        <div class="task-row">
-            <div class="task-left">
-                <span class="task-number">01</span>
-                <span class="task-title">领身份，进入课程</span>
-            </div>
-            <span class="status">未提交</span>
+        <div class="login-copy">
+          使用你的 CUHK-Shenzhen 学校邮箱登录。
+          我们会向邮箱发送一个 6 位验证码，不需要设置密码。
         </div>
 
 
-        <div class="task-row">
-            <div class="task-left">
-                <span class="task-number">02</span>
-                <span class="task-title">了解案件背景</span>
-            </div>
-            <span class="status">未提交</span>
-        </div>
+        <div id="emailStep">
 
-
-        <div class="task-row">
-            <div class="task-left">
-                <span class="task-number">03</span>
-                <span class="task-title">找一条能核对的线索</span>
-            </div>
-            <span class="status">未提交</span>
-        </div>
-
-
-        <div class="task-row">
-            <div class="task-left">
-                <span class="task-number">04</span>
-                <span class="task-title">根据线索进行追问！</span>
-            </div>
-            <span class="status">未提交</span>
-        </div>
-
-
-        <div class="task-row">
-            <div class="task-left">
-                <span class="task-number">05</span>
-                <span class="task-title">把线索连起来！</span>
-            </div>
-            <span class="status">未提交</span>
-        </div>
-
-
-        <div class="task-row">
-            <div class="task-left">
-                <span class="task-number">06</span>
-                <span class="task-title">结案，留给明天的自己</span>
-            </div>
-            <span class="status">未提交</span>
-        </div>
-
-    </div>
-
-</section>
-
-
-<section class="submit-panel" id="my-case-form">
-
-    <p class="audience">
-        SUBMIT EVIDENCE
-    </p>
-
-    <h2>提交一条线索</h2>
-
-    <p class="note">
-        完成任务后，上传能够证明你完成任务的学习结果截图。
-    </p>
-
-
-    <div class="field">
-
-        <label for="task-select">
-            选择任务
-        </label>
-
-        <select
-            id="task-select"
-            style="
-                width:100%;
-                min-height:48px;
-                padding:11px 13px;
-                border:1px solid var(--line);
-                background:var(--bg);
-                color:var(--ink);
-                font:inherit;
-            "
-        >
-
-            <option value="">
-                请选择要提交的任务
-            </option>
-
-            <option value="1">
-                01｜领身份，进入课程
-            </option>
-
-            <option value="2">
-                02｜了解案件背景
-            </option>
-
-            <option value="3">
-                03｜找一条能核对的线索
-            </option>
-
-            <option value="4">
-                04｜根据线索进行追问！
-            </option>
-
-            <option value="5">
-                05｜把线索连起来！
-            </option>
-
-            <option value="6">
-                06｜结案，留给明天的自己
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div class="field">
-
-        <label>
-            学习结果截图
-        </label>
-
-
-        <label class="upload-box">
+          <div class="form-row">
 
             <input
-                type="file"
-                id="screenshot"
-                accept="image/png,image/jpeg"
+              id="emailInput"
+              class="input"
+              type="email"
+              placeholder="name@cuhk.edu.cn"
+              autocomplete="email"
+            />
+
+            <button
+              id="sendCodeBtn"
+              class="btn"
+              type="button"
             >
+              获取登录验证码
+            </button>
 
-            <span class="upload-content">
+          </div>
 
-                <strong>
-                    ＋ 上传学习结果截图
-                </strong>
+          <div class="hint">
+            仅支持 @cuhk.edu.cn 学校邮箱。
+          </div>
 
-                <span>
-                    支持 JPG / PNG
-                </span>
-
-            </span>
-
-        </label>
-
-    </div>
+        </div>
 
 
-    <div class="field">
+        <div id="otpStep" style="display:none;">
 
-        <label for="remark">
-            备注（选填）
-        </label>
+          <div class="form-row">
 
-        <textarea
-            id="remark"
-            placeholder="如果需要，可以补充说明你的提交内容。"
-        ></textarea>
+            <input
+              id="otpInput"
+              class="input"
+              type="text"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="6"
+              placeholder="输入 6 位验证码"
+            />
 
-    </div>
+            <button
+              id="verifyCodeBtn"
+              class="btn"
+              type="button"
+            >
+              验证并登录
+            </button>
+
+          </div>
+
+          <div class="hint">
+            验证码已经发送到你的学校邮箱。
+            如果没有收到，请检查垃圾邮件。
+          </div>
+
+          <button
+            id="changeEmailBtn"
+            class="btn secondary"
+            type="button"
+            style="margin-top:12px;"
+          >
+            更换邮箱
+          </button>
+
+        </div>
 
 
-    <button
-        class="primary"
+        <div id="loginMessage" class="message"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- 登录后的用户信息 -->
+
+    <div id="userBar" class="user-bar">
+
+      <div>
+        <div class="user-info-label">CURRENT INVESTIGATOR</div>
+        <div id="userEmail" class="user-email"></div>
+      </div>
+
+      <button
+        id="logoutBtn"
+        class="btn secondary"
         type="button"
-        id="submit-button"
-    >
-        提交审核
-    </button>
-
-
-    <p class="login-note">
-        每个任务每人只计一次通过审核。
-        如果审核未通过，可以根据审核意见重新提交。
-    </p>
-
-</section>
-
-
-<section class="lottery-panel">
-
-    <p class="audience">
-        REWARD STATUS
-    </p>
-
-    <h2>我的抽奖</h2>
-
-
-    <div class="lottery-grid">
-
-        <div class="lottery-card">
-
-            <small>
-                每日抽奖机会
-            </small>
-
-            <strong>
-                0 次
-            </strong>
-
-        </div>
-
-
-        <div class="lottery-card">
-
-            <small>
-                大奖抽奖资格
-            </small>
-
-            <strong>
-                未获得
-            </strong>
-
-        </div>
+      >
+        退出登录
+      </button>
 
     </div>
 
 
-    <a
-        class="lottery-button"
-        href="#"
-        aria-disabled="true"
-    >
-        暂无可用抽奖
-    </a>
+    <!-- 登录后的案件页面 -->
 
-</section>
+    <section id="dashboard" class="dashboard">
 
+      <div class="stats">
 
-<section class="history-panel">
+        <div class="stat">
+          <div class="stat-label">已通过任务</div>
+          <div id="approvedCount" class="stat-value">0 / 6</div>
+        </div>
 
-    <p class="audience">
-        DRAW HISTORY
-    </p>
+        <div class="stat">
+          <div class="stat-label">每日抽奖机会</div>
+          <div id="dailyCredits" class="stat-value">0</div>
+        </div>
 
-    <h2>抽奖记录</h2>
+        <div class="stat">
+          <div class="stat-label">结案大奖资格</div>
+          <div id="grandStatus" class="stat-value">未获得</div>
+        </div>
 
-    <p class="note">
-        完成审核并获得抽奖机会后，
-        抽奖结果会显示在这里。
-    </p>
-
-
-    <div class="history-row">
-
-        <span class="history-time">
-            暂无记录
-        </span>
-
-        <span class="history-result">
-            —
-        </span>
-
-    </div>
-
-</section>
-
-</main>
+      </div>
 
 
-<footer>
+      <!-- 任务 -->
 
-    Maven 概念侦探社 · 活动时间、审核与领取安排见课程群通知。
+      <section class="section" id="tasks">
 
-</footer>
+        <div class="section-heading">
+          <h2>六条线索</h2>
+          <span>CASE EVIDENCE / 01–06</span>
+        </div>
+
+        <div id="taskList" class="tasks">
+
+          <div class="empty">
+            正在读取案件记录……
+          </div>
+
+        </div>
+
+      </section>
 
 
-<script>
+      <!-- 提交 -->
 
-const loginButton = document.getElementById("login-button");
+      <section class="section">
 
-const submitButton = document.getElementById("submit-button");
+        <div class="section-heading">
+          <h2>提交证据</h2>
+          <span>SUBMIT EVIDENCE</span>
+        </div>
 
-const screenshot = document.getElementById("screenshot");
+        <div class="submission-box">
+
+          <div class="field">
+
+            <label class="field-label" for="taskSelect">
+              选择任务
+            </label>
+
+            <select id="taskSelect" class="select">
+              <option value="">请选择一项任务</option>
+            </select>
+
+          </div>
 
 
-loginButton.addEventListener("click", function () {
+          <div class="field">
 
-    const email = document
-        .getElementById("school-email")
-        .value
-        .trim();
+            <label class="field-label" for="screenshotInput">
+              学习结果截图
+            </label>
 
-    if (!email) {
-        alert("请先填写学校邮箱。");
-        return;
+            <input
+              id="screenshotInput"
+              class="file-input"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+            />
+
+            <div class="hint">
+              请上传能够证明任务完成的截图。
+            </div>
+
+          </div>
+
+
+          <div class="field">
+
+            <label class="field-label" for="noteInput">
+              备注（可选）
+            </label>
+
+            <textarea
+              id="noteInput"
+              class="textarea"
+              placeholder="如果需要，可以补充说明。"
+            ></textarea>
+
+          </div>
+
+
+          <button
+            id="submitEvidenceBtn"
+            class="btn"
+            type="button"
+          >
+            提交审核
+          </button>
+
+          <div id="submissionMessage" class="message"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 抽奖 -->
+
+      <section class="section">
+
+        <div class="section-heading">
+          <h2>奖励记录</h2>
+          <span>REWARD RECORD</span>
+        </div>
+
+        <div class="lottery-box">
+
+          <div class="lottery-card">
+
+            <div class="lottery-title">
+              每日随机抽奖
+            </div>
+
+            <div class="lottery-text">
+              每完成一项任务并通过审核，
+              立即获得一次每日随机抽奖机会。
+            </div>
+
+            <button
+              id="dailyLotteryBtn"
+              class="btn"
+              type="button"
+              disabled
+              style="margin-top:16px;"
+            >
+              暂未获得抽奖机会
+            </button>
+
+          </div>
+
+
+          <div class="lottery-card">
+
+            <div class="lottery-title">
+              结案大奖
+            </div>
+
+            <div class="lottery-text">
+              六项任务全部通过审核后，
+              获得一次结案大奖抽奖资格。
+            </div>
+
+            <button
+              id="grandLotteryBtn"
+              class="btn"
+              type="button"
+              disabled
+              style="margin-top:16px;"
+            >
+              尚未获得资格
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- 抽奖历史 -->
+
+      <section class="section">
+
+        <div class="section-heading">
+          <h2>抽奖历史</h2>
+          <span>LOTTERY HISTORY</span>
+        </div>
+
+        <div id="lotteryHistory" class="empty">
+          暂无抽奖记录。
+        </div>
+
+      </section>
+
+    </section>
+
+
+    <footer class="footer">
+      MAVEN 概念侦探社 · CASE FILE / MY CASE
+      <br />
+      活动时间、最终名额、提交与领取安排以课程群通知为准。
+    </footer>
+
+  </main>
+
+
+  <script>
+    // ============================================
+    // Supabase 初始化
+    // ============================================
+
+    if (
+      !window.SUPABASE_CONFIG ||
+      !window.SUPABASE_CONFIG.url ||
+      !window.SUPABASE_CONFIG.publishableKey
+    ) {
+      throw new Error("Supabase configuration is missing.");
     }
 
-    alert(
-        "学校邮箱登录功能正在接入中。\\n\\n"
-        + "正式上线后，验证码会发送到：\\n"
-        + email
+    const {
+      createClient
+    } = window.supabase;
+
+    const supabaseClient = createClient(
+      window.SUPABASE_CONFIG.url,
+      window.SUPABASE_CONFIG.publishableKey
     );
 
-});
+
+    // ============================================
+    // DOM
+    // ============================================
+
+    const loginPanel = document.getElementById("loginPanel");
+    const emailStep = document.getElementById("emailStep");
+    const otpStep = document.getElementById("otpStep");
+
+    const emailInput = document.getElementById("emailInput");
+    const otpInput = document.getElementById("otpInput");
+
+    const sendCodeBtn = document.getElementById("sendCodeBtn");
+    const verifyCodeBtn = document.getElementById("verifyCodeBtn");
+    const changeEmailBtn = document.getElementById("changeEmailBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const loginMessage = document.getElementById("loginMessage");
+
+    const userBar = document.getElementById("userBar");
+    const userEmail = document.getElementById("userEmail");
+
+    const dashboard = document.getElementById("dashboard");
+
+    const approvedCount = document.getElementById("approvedCount");
+    const dailyCredits = document.getElementById("dailyCredits");
+    const grandStatus = document.getElementById("grandStatus");
+
+    const taskList = document.getElementById("taskList");
+    const taskSelect = document.getElementById("taskSelect");
+
+    const screenshotInput =
+      document.getElementById("screenshotInput");
+
+    const noteInput =
+      document.getElementById("noteInput");
+
+    const submitEvidenceBtn =
+      document.getElementById("submitEvidenceBtn");
+
+    const submissionMessage =
+      document.getElementById("submissionMessage");
+
+    const dailyLotteryBtn =
+      document.getElementById("dailyLotteryBtn");
+
+    const grandLotteryBtn =
+      document.getElementById("grandLotteryBtn");
+
+    const lotteryHistory =
+      document.getElementById("lotteryHistory");
 
 
-submitButton.addEventListener("click", function () {
+    let currentUser = null;
 
-    const task = document
-        .getElementById("task-select")
-        .value;
 
-    if (!task) {
-        alert("请先选择要提交的任务。");
-        return;
+    // ============================================
+    // 消息
+    // ============================================
+
+    function showMessage(element, text, type = "success") {
+      element.textContent = text;
+      element.className = "message show " + type;
     }
 
-    if (!screenshot.files.length) {
-        alert("请先上传学习结果截图。");
-        return;
+
+    function clearMessage(element) {
+      element.textContent = "";
+      element.className = "message";
     }
 
-    alert(
-        "提交功能正在接入中。\\n\\n"
-        + "正式上线后，这份截图会进入审核队列。"
+
+    // ============================================
+    // 邮箱检查
+    // ============================================
+
+    function isSchoolEmail(email) {
+      return /^[^\s@]+@cuhk\.edu\.cn$/i.test(email.trim());
+    }
+
+
+    // ============================================
+    // 发送验证码
+    // ============================================
+
+    sendCodeBtn.addEventListener("click", async () => {
+
+      clearMessage(loginMessage);
+
+      const email = emailInput.value.trim().toLowerCase();
+
+      if (!isSchoolEmail(email)) {
+
+        showMessage(
+          loginMessage,
+          "请输入有效的 CUHK-Shenzhen 学校邮箱（@cuhk.edu.cn）。",
+          "error"
+        );
+
+        return;
+      }
+
+
+      sendCodeBtn.disabled = true;
+      sendCodeBtn.textContent = "发送中……";
+
+
+      try {
+
+        const {
+          error
+        } = await supabaseClient.auth.signInWithOtp({
+          email: email,
+          options: {
+            shouldCreateUser: true
+          }
+        });
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        emailStep.style.display = "none";
+        otpStep.style.display = "block";
+
+        showMessage(
+          loginMessage,
+          "验证码已经发送到你的学校邮箱，请查收邮件。",
+          "success"
+        );
+
+        otpInput.focus();
+
+      } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+          loginMessage,
+          "验证码发送失败：" + error.message,
+          "error"
+        );
+
+      } finally {
+
+        sendCodeBtn.disabled = false;
+        sendCodeBtn.textContent = "获取登录验证码";
+
+      }
+
+    });
+
+
+    // ============================================
+    // 验证 OTP
+    // ============================================
+
+    verifyCodeBtn.addEventListener("click", async () => {
+
+      clearMessage(loginMessage);
+
+      const email = emailInput.value.trim().toLowerCase();
+      const token = otpInput.value.trim();
+
+
+      if (!isSchoolEmail(email)) {
+
+        showMessage(
+          loginMessage,
+          "学校邮箱格式不正确。",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (!/^\d{6}$/.test(token)) {
+
+        showMessage(
+          loginMessage,
+          "请输入 6 位验证码。",
+          "error"
+        );
+
+        return;
+      }
+
+
+      verifyCodeBtn.disabled = true;
+      verifyCodeBtn.textContent = "验证中……";
+
+
+      try {
+
+        const {
+          data,
+          error
+        } = await supabaseClient.auth.verifyOtp({
+          email: email,
+          token: token,
+          type: "email"
+        });
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        currentUser = data.user;
+
+        showMessage(
+          loginMessage,
+          "登录成功，正在打开你的案件……",
+          "success"
+        );
+
+        await loadUserDashboard();
+
+      } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+          loginMessage,
+          "验证码验证失败：" + error.message,
+          "error"
+        );
+
+      } finally {
+
+        verifyCodeBtn.disabled = false;
+        verifyCodeBtn.textContent = "验证并登录";
+
+      }
+
+    });
+
+
+    // ============================================
+    // 更换邮箱
+    // ============================================
+
+    changeEmailBtn.addEventListener("click", () => {
+
+      otpInput.value = "";
+
+      otpStep.style.display = "none";
+      emailStep.style.display = "block";
+
+      clearMessage(loginMessage);
+
+      emailInput.focus();
+
+    });
+
+
+    // ============================================
+    // 退出
+    // ============================================
+
+    logoutBtn.addEventListener("click", async () => {
+
+      const {
+        error
+      } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      currentUser = null;
+
+      dashboard.classList.remove("show");
+      userBar.classList.remove("show");
+
+      loginPanel.style.display = "block";
+
+      emailStep.style.display = "block";
+      otpStep.style.display = "none";
+
+      emailInput.value = "";
+      otpInput.value = "";
+
+      clearMessage(loginMessage);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    });
+
+
+    // ============================================
+    // 登录状态
+    // ============================================
+
+    async function checkExistingSession() {
+
+      const {
+        data,
+        error
+      } = await supabaseClient.auth.getSession();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (data.session && data.session.user) {
+
+        currentUser = data.session.user;
+
+        await loadUserDashboard();
+
+      }
+
+    }
+
+
+    // ============================================
+    // 读取案件数据
+    // ============================================
+
+    async function loadUserDashboard() {
+
+      if (!currentUser) {
+        return;
+      }
+
+
+      loginPanel.style.display = "none";
+
+      userBar.classList.add("show");
+
+      dashboard.classList.add("show");
+
+      userEmail.textContent =
+        currentUser.email || "学校邮箱";
+
+
+      await Promise.all([
+        loadTasks(),
+        loadRewards(),
+        loadLotteryHistory()
+      ]);
+
+    }
+
+
+    // ============================================
+    // 读取任务
+    // ============================================
+
+    async function loadTasks() {
+
+      const {
+        data: tasks,
+        error: tasksError
+      } = await supabaseClient
+        .from("tasks")
+        .select("*")
+        .order("task_order", {
+          ascending: true
+        });
+
+
+      if (tasksError) {
+
+        console.error(tasksError);
+
+        taskList.innerHTML = `
+          <div class="empty">
+            暂时无法读取案件记录。
+          </div>
+        `;
+
+        return;
+      }
+
+
+      const {
+        data: submissions,
+        error: submissionsError
+      } = await supabaseClient
+        .from("submissions")
+        .select("*")
+        .eq("user_id", currentUser.id);
+
+
+      if (submissionsError) {
+
+        console.error(submissionsError);
+
+        taskList.innerHTML = `
+          <div class="empty">
+            暂时无法读取审核记录。
+          </div>
+        `;
+
+        return;
+      }
+
+
+      const latestByTask = {};
+
+      submissions.forEach((submission) => {
+
+        const existing =
+          latestByTask[submission.task_id];
+
+        if (
+          !existing ||
+          new Date(submission.submitted_at) >
+          new Date(existing.submitted_at)
+        ) {
+          latestByTask[submission.task_id] = submission;
+        }
+
+      });
+
+
+      taskList.innerHTML = "";
+
+      taskSelect.innerHTML = `
+        <option value="">请选择一项任务</option>
+      `;
+
+
+      tasks.forEach((task) => {
+
+        const submission =
+          latestByTask[task.id];
+
+
+        let statusClass = "none";
+        let statusText = "未提交";
+
+
+        if (submission) {
+
+          if (submission.status === "approved") {
+
+            statusClass = "approved";
+            statusText = "审核通过";
+
+          } else if (submission.status === "pending") {
+
+            statusClass = "pending";
+            statusText = "审核中";
+
+          } else if (submission.status === "rejected") {
+
+            statusClass = "rejected";
+            statusText = "需要重新提交";
+
+          }
+
+        }
+
+
+        const card = document.createElement("div");
+
+        card.className = "task-card";
+
+        card.innerHTML = `
+          <div class="task-number">
+            ${String(task.task_order).padStart(2, "0")}
+          </div>
+
+          <div>
+            <div class="task-title">
+              ${escapeHtml(task.title)}
+            </div>
+
+            <div class="task-desc">
+              ${escapeHtml(task.short_description)}
+            </div>
+          </div>
+
+          <div class="status ${statusClass}">
+            ${statusText}
+          </div>
+        `;
+
+
+        taskList.appendChild(card);
+
+
+        const option = document.createElement("option");
+
+        option.value = task.id;
+
+        option.textContent =
+          String(task.task_order).padStart(2, "0") +
+          " · " +
+          task.title;
+
+
+        if (
+          submission &&
+          submission.status === "approved"
+        ) {
+          option.disabled = true;
+          option.textContent += " · 已完成";
+        }
+
+
+        taskSelect.appendChild(option);
+
+      });
+
+    }
+
+
+    // ============================================
+    // 读取奖励
+    // ============================================
+
+    async function loadRewards() {
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from("user_rewards")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+
+      if (error) {
+
+        console.error(error);
+        return;
+
+      }
+
+
+      if (!data) {
+        return;
+      }
+
+
+      approvedCount.textContent =
+        `${data.approved_task_count} / 6`;
+
+
+      dailyCredits.textContent =
+        data.daily_lottery_credits;
+
+
+      if (data.grand_lottery_eligible) {
+
+        grandStatus.textContent = "已获得";
+
+        grandLotteryBtn.disabled = false;
+
+        grandLotteryBtn.textContent =
+          "参加结案大奖抽奖";
+
+      } else {
+
+        grandStatus.textContent = "未获得";
+
+        grandLotteryBtn.disabled = true;
+
+        grandLotteryBtn.textContent =
+          "尚未获得资格";
+
+      }
+
+
+      if (data.daily_lottery_credits > 0) {
+
+        dailyLotteryBtn.disabled = false;
+
+        dailyLotteryBtn.textContent =
+          `立即抽奖（${data.daily_lottery_credits} 次）`;
+
+      } else {
+
+        dailyLotteryBtn.disabled = true;
+
+        dailyLotteryBtn.textContent =
+          "暂未获得抽奖机会";
+
+      }
+
+    }
+
+
+    // ============================================
+    // 读取抽奖历史
+    // ============================================
+
+    async function loadLotteryHistory() {
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from("lottery_draws")
+        .select(`
+          id,
+          draw_type,
+          result_name,
+          created_at
+        `)
+        .eq("user_id", currentUser.id)
+        .order("created_at", {
+          ascending: false
+        });
+
+
+      if (error) {
+
+        console.error(error);
+
+        lotteryHistory.textContent =
+          "暂时无法读取抽奖记录。";
+
+        return;
+
+      }
+
+
+      if (!data || data.length === 0) {
+
+        lotteryHistory.textContent =
+          "暂无抽奖记录。";
+
+        return;
+
+      }
+
+
+      lotteryHistory.innerHTML =
+        data.map((item) => {
+
+          const date =
+            new Date(item.created_at)
+              .toLocaleString("zh-CN");
+
+          const type =
+            item.draw_type === "grand"
+              ? "结案大奖"
+              : "每日随机礼";
+
+
+          return `
+            <div
+              style="
+                display:flex;
+                justify-content:space-between;
+                gap:16px;
+                padding:12px 0;
+                border-bottom:1px solid var(--line);
+              "
+            >
+              <span>
+                ${escapeHtml(type)}
+                ·
+                ${escapeHtml(item.result_name)}
+              </span>
+
+              <span style="color:var(--muted);font-size:11px;">
+                ${escapeHtml(date)}
+              </span>
+            </div>
+          `;
+
+        }).join("");
+
+    }
+
+
+    // ============================================
+    // 提交证据
+    // ============================================
+
+    submitEvidenceBtn.addEventListener(
+      "click",
+      async () => {
+
+        clearMessage(submissionMessage);
+
+        if (!currentUser) {
+
+          showMessage(
+            submissionMessage,
+            "请先登录。",
+            "error"
+          );
+
+          return;
+        }
+
+
+        const taskId =
+          taskSelect.value;
+
+        const file =
+          screenshotInput.files[0];
+
+        const note =
+          noteInput.value.trim();
+
+
+        if (!taskId) {
+
+          showMessage(
+            submissionMessage,
+            "请选择要提交的任务。",
+            "error"
+          );
+
+          return;
+        }
+
+
+        if (!file) {
+
+          showMessage(
+            submissionMessage,
+            "请上传学习结果截图。",
+            "error"
+          );
+
+          return;
+        }
+
+
+        if (!file.type.startsWith("image/")) {
+
+          showMessage(
+            submissionMessage,
+            "目前只支持图片格式。",
+            "error"
+          );
+
+          return;
+        }
+
+
+        submitEvidenceBtn.disabled = true;
+        submitEvidenceBtn.textContent = "提交中……";
+
+
+        try {
+
+          const extension =
+            file.name.split(".").pop().toLowerCase();
+
+          const fileName =
+            `${crypto.randomUUID()}.${extension}`;
+
+          const filePath =
+            `${currentUser.id}/${fileName}`;
+
+
+          const {
+            error: uploadError
+          } = await supabaseClient
+            .storage
+            .from("maven-submissions")
+            .upload(
+              filePath,
+              file,
+              {
+                cacheControl: "3600",
+                upsert: false
+              }
+            );
+
+
+          if (uploadError) {
+            throw uploadError;
+          }
+
+
+          const {
+            error: submissionError
+          } = await supabaseClient
+            .from("submissions")
+            .insert({
+              user_id: currentUser.id,
+              task_id: Number(taskId),
+              screenshot_path: filePath,
+              note: note || null
+            });
+
+
+          if (submissionError) {
+            throw submissionError;
+          }
+
+
+          screenshotInput.value = "";
+          noteInput.value = "";
+          taskSelect.value = "";
+
+
+          showMessage(
+            submissionMessage,
+            "提交成功！你的学习结果已经进入人工审核。",
+            "success"
+          );
+
+
+          await loadTasks();
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          showMessage(
+            submissionMessage,
+            "提交失败：" + error.message,
+            "error"
+          );
+
+        } finally {
+
+          submitEvidenceBtn.disabled = false;
+          submitEvidenceBtn.textContent = "提交审核";
+
+        }
+
+      }
     );
 
-});
 
-</script>
+    // ============================================
+    // HTML 安全处理
+    // ============================================
+
+    function escapeHtml(value) {
+
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    // ============================================
+    // 监听登录状态变化
+    // ============================================
+
+    supabaseClient.auth.onAuthStateChange(
+      async (event, session) => {
+
+        if (session && session.user) {
+
+          currentUser = session.user;
+
+          await loadUserDashboard();
+
+        } else {
+
+          currentUser = null;
+
+        }
+
+      }
+    );
+
+
+    // ============================================
+    // 页面加载
+    // ============================================
+
+    checkExistingSession();
+
+  </script>
 
 </body>
 </html>
