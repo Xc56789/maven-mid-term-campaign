@@ -5,7 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maven｜我的案件</title>
 
+  <!-- Supabase 主加载地址 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    /*
+      如果主 CDN 没有正常加载，
+      稍后会自动尝试备用 CDN。
+    */
+    window.supabaseReady = false;
+
+    function loadSupabaseFallback() {
+      return new Promise((resolve, reject) => {
+        if (window.supabase) {
+          window.supabaseReady = true;
+          resolve();
+          return;
+        }
+
+        const script = document.createElement("script");
+
+        script.src = "https://unpkg.com/@supabase/supabase-js@2";
+
+        script.onload = () => {
+          if (window.supabase) {
+            window.supabaseReady = true;
+            resolve();
+          } else {
+            reject(
+              new Error("Supabase JavaScript library loaded but was not available.")
+            );
+          }
+        };
+
+        script.onerror = () => {
+          reject(
+            new Error(
+              "无法加载 Supabase JavaScript 库。请检查浏览器网络或稍后刷新页面。"
+            )
+          );
+        };
+
+        document.head.appendChild(script);
+      });
+    }
+  </script>
+
   <script src="./supabase-config.js"></script>
 
   <style>
@@ -400,6 +445,26 @@
       font-size: 13px;
     }
 
+    .system-status {
+      margin-top: 16px;
+      padding: 10px 12px;
+      border: 1px dashed var(--line);
+      background: rgba(240, 242, 237, 0.6);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .system-status.ok {
+      color: var(--green);
+    }
+
+    .system-status.error {
+      color: var(--red);
+      background: #f3e5e2;
+      border-color: var(--red);
+    }
+
     @media (max-width: 720px) {
       .page {
         width: min(100% - 20px, 1080px);
@@ -440,7 +505,9 @@
     <section class="case-header">
       <div class="stamp">CONFIDENTIAL · STUDENT FILE</div>
       <div class="case-label">CASE FILE / MY CASE</div>
+
       <h1>我的案件</h1>
+
       <p class="header-description">
         完成 Maven 课程任务，上传截图作为线索，等待审核。
         每完成 1 项任务并通过审核，即获得 1 次每日抽奖机会；
@@ -453,14 +520,19 @@
       <h2 class="panel-title">01 · 身份确认</h2>
 
       <div id="emailStep">
+
         <div class="field">
-          <label class="field-label" for="email">学校邮箱</label>
+          <label class="field-label" for="email">
+            学校邮箱
+          </label>
+
           <input
             id="email"
             type="email"
             placeholder="name@link.cuhk.edu.cn"
             autocomplete="email"
           />
+
           <p class="hint">
             仅支持 @link.cuhk.edu.cn 学校邮箱。
           </p>
@@ -474,8 +546,12 @@
       </div>
 
       <div id="otpStep" class="hidden">
+
         <div class="field">
-          <label class="field-label" for="otp">登录验证码</label>
+          <label class="field-label" for="otp">
+            登录验证码
+          </label>
+
           <input
             id="otp"
             type="text"
@@ -484,72 +560,121 @@
             placeholder="请输入 6 位验证码"
             autocomplete="one-time-code"
           />
+
           <p class="hint">
             验证码已发送到你的学校邮箱。
           </p>
         </div>
 
         <div class="button-row">
+
           <button id="verifyOtpBtn" type="button">
             登录
           </button>
 
-          <button id="backToEmailBtn" class="secondary" type="button">
+          <button
+            id="backToEmailBtn"
+            class="secondary"
+            type="button"
+          >
             返回修改邮箱
           </button>
+
         </div>
       </div>
 
       <div id="loginMessage" class="message"></div>
+
+      <div id="systemStatus" class="system-status">
+        正在检查登录系统……
+      </div>
     </section>
 
     <!-- 用户案件 -->
     <section id="dashboardSection" class="hidden">
 
       <div class="panel">
+
         <div class="user-bar">
+
           <div>
-            <div class="case-label">CURRENT INVESTIGATOR</div>
+            <div class="case-label">
+              CURRENT INVESTIGATOR
+            </div>
+
             <div id="userEmail" class="user-email"></div>
           </div>
 
-          <button id="logoutBtn" class="danger" type="button">
+          <button
+            id="logoutBtn"
+            class="danger"
+            type="button"
+          >
             退出登录
           </button>
+
         </div>
 
         <div class="stats">
+
           <div class="stat">
-            <div class="stat-label">已通过任务</div>
-            <div id="approvedCount" class="stat-value">0 / 6</div>
+            <div class="stat-label">
+              已通过任务
+            </div>
+
+            <div id="approvedCount" class="stat-value">
+              0 / 6
+            </div>
           </div>
 
           <div class="stat">
-            <div class="stat-label">每日抽奖机会</div>
-            <div id="dailyCredits" class="stat-value">0</div>
+            <div class="stat-label">
+              每日抽奖机会
+            </div>
+
+            <div id="dailyCredits" class="stat-value">
+              0
+            </div>
           </div>
 
           <div class="stat">
-            <div class="stat-label">结案大奖资格</div>
-            <div id="grandEligibility" class="stat-value">—</div>
+            <div class="stat-label">
+              结案大奖资格
+            </div>
+
+            <div id="grandEligibility" class="stat-value">
+              —
+            </div>
           </div>
+
         </div>
 
-        <h2 class="panel-title">02 · 案件任务</h2>
+        <h2 class="panel-title">
+          02 · 案件任务
+        </h2>
 
         <div id="taskList" class="task-list">
-          <div class="loading">正在读取案件资料……</div>
+          <div class="loading">
+            正在读取案件资料……
+          </div>
         </div>
 
         <div id="dashboardMessage" class="message"></div>
+
       </div>
 
       <div class="panel">
-        <h2 class="panel-title">03 · 抽奖记录</h2>
+
+        <h2 class="panel-title">
+          03 · 抽奖记录
+        </h2>
 
         <div id="lotteryHistory" class="history-list">
-          <div class="empty">暂无抽奖记录。</div>
+          <div class="empty">
+            暂无抽奖记录。
+          </div>
         </div>
+
       </div>
 
     </section>
@@ -557,61 +682,120 @@
   </main>
 
   <script>
-    const config = window.SUPABASE_CONFIG || {};
-
-    if (!config.url || !config.publishableKey) {
-      throw new Error("Supabase configuration is missing.");
-    }
-
-    const supabase = window.supabase.createClient(
-      config.url,
-      config.publishableKey
-    );
+    let supabaseClient = null;
 
     let currentUser = null;
     let tasks = [];
     let submissions = [];
     let rewards = null;
 
-    const loginSection = document.getElementById("loginSection");
-    const dashboardSection = document.getElementById("dashboardSection");
+    const loginSection =
+      document.getElementById("loginSection");
 
-    const emailStep = document.getElementById("emailStep");
-    const otpStep = document.getElementById("otpStep");
+    const dashboardSection =
+      document.getElementById("dashboardSection");
 
-    const emailInput = document.getElementById("email");
-    const otpInput = document.getElementById("otp");
+    const emailStep =
+      document.getElementById("emailStep");
 
-    const sendOtpBtn = document.getElementById("sendOtpBtn");
-    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-    const backToEmailBtn = document.getElementById("backToEmailBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const otpStep =
+      document.getElementById("otpStep");
 
-    const loginMessage = document.getElementById("loginMessage");
-    const dashboardMessage = document.getElementById("dashboardMessage");
+    const emailInput =
+      document.getElementById("email");
 
-    const userEmail = document.getElementById("userEmail");
-    const approvedCount = document.getElementById("approvedCount");
-    const dailyCredits = document.getElementById("dailyCredits");
-    const grandEligibility = document.getElementById("grandEligibility");
+    const otpInput =
+      document.getElementById("otp");
 
-    const taskList = document.getElementById("taskList");
-    const lotteryHistory = document.getElementById("lotteryHistory");
+    const sendOtpBtn =
+      document.getElementById("sendOtpBtn");
 
-    function showMessage(element, message, isError = false) {
+    const verifyOtpBtn =
+      document.getElementById("verifyOtpBtn");
+
+    const backToEmailBtn =
+      document.getElementById("backToEmailBtn");
+
+    const logoutBtn =
+      document.getElementById("logoutBtn");
+
+    const loginMessage =
+      document.getElementById("loginMessage");
+
+    const dashboardMessage =
+      document.getElementById("dashboardMessage");
+
+    const systemStatus =
+      document.getElementById("systemStatus");
+
+    const userEmail =
+      document.getElementById("userEmail");
+
+    const approvedCount =
+      document.getElementById("approvedCount");
+
+    const dailyCredits =
+      document.getElementById("dailyCredits");
+
+    const grandEligibility =
+      document.getElementById("grandEligibility");
+
+    const taskList =
+      document.getElementById("taskList");
+
+    const lotteryHistory =
+      document.getElementById("lotteryHistory");
+
+
+    function showMessage(
+      element,
+      message,
+      isError = false
+    ) {
       element.textContent = message;
+
       element.classList.add("show");
-      element.classList.toggle("error", isError);
+
+      element.classList.toggle(
+        "error",
+        isError
+      );
     }
+
 
     function hideMessage(element) {
       element.textContent = "";
-      element.classList.remove("show", "error");
+
+      element.classList.remove(
+        "show",
+        "error"
+      );
     }
 
-    function isSchoolEmail(email) {
-      return /^[^\s@]+@link\.cuhk\.edu\.cn$/i.test(email.trim());
+
+    function showSystemStatus(
+      message,
+      type = ""
+    ) {
+      systemStatus.textContent = message;
+
+      systemStatus.classList.remove(
+        "ok",
+        "error"
+      );
+
+      if (type) {
+        systemStatus.classList.add(type);
+      }
     }
+
+
+    function isSchoolEmail(email) {
+      return /^[^\s@]+@link\.cuhk\.edu\.cn$/i.test(
+        email.trim()
+      );
+    }
+
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -622,28 +806,55 @@
         .replaceAll("'", "&#039;");
     }
 
+
     function getSubmissionForTask(taskId) {
       return submissions.find(
-        (submission) => Number(submission.task_id) === Number(taskId)
+        (submission) =>
+          Number(submission.task_id) ===
+          Number(taskId)
       );
     }
 
+
     function statusText(status) {
-      if (status === "approved") return "已通过";
-      if (status === "rejected") return "需重新提交";
-      if (status === "pending") return "审核中";
+      if (status === "approved") {
+        return "已通过";
+      }
+
+      if (status === "rejected") {
+        return "需重新提交";
+      }
+
+      if (status === "pending") {
+        return "审核中";
+      }
+
       return "未提交";
     }
 
-    function renderStats() {
-      const count = rewards?.approved_task_count ?? 0;
-      const credits = rewards?.daily_lottery_credits ?? 0;
-      const eligible = rewards?.grand_lottery_eligible ?? false;
 
-      approvedCount.textContent = `${count} / 6`;
-      dailyCredits.textContent = String(credits);
-      grandEligibility.textContent = eligible ? "已获得" : "未获得";
+    function renderStats() {
+      const count =
+        rewards?.approved_task_count ?? 0;
+
+      const credits =
+        rewards?.daily_lottery_credits ?? 0;
+
+      const eligible =
+        rewards?.grand_lottery_eligible ?? false;
+
+      approvedCount.textContent =
+        `${count} / 6`;
+
+      dailyCredits.textContent =
+        String(credits);
+
+      grandEligibility.textContent =
+        eligible
+          ? "已获得"
+          : "未获得";
     }
+
 
     function renderTasks() {
       if (!tasks.length) {
@@ -652,18 +863,31 @@
             暂时没有可用任务。
           </div>
         `;
+
         return;
       }
 
+
       taskList.innerHTML = tasks
-        .sort((a, b) => Number(a.task_order) - Number(b.task_order))
+        .sort(
+          (a, b) =>
+            Number(a.task_order) -
+            Number(b.task_order)
+        )
         .map((task) => {
-          const submission = getSubmissionForTask(task.id);
-          const status = submission?.status || "unsubmitted";
+
+          const submission =
+            getSubmissionForTask(task.id);
+
+          const status =
+            submission?.status ||
+            "unsubmitted";
 
           let submissionHtml = "";
 
+
           if (status === "approved") {
+
             submissionHtml = `
               <div class="submission-box">
                 <div class="hint">
@@ -671,7 +895,9 @@
                 </div>
               </div>
             `;
+
           } else if (status === "pending") {
+
             submissionHtml = `
               <div class="submission-box">
                 <div class="hint">
@@ -679,20 +905,29 @@
                 </div>
               </div>
             `;
+
           } else {
-            const rejectedNote = submission?.review_note
-              ? `
-                <div class="message show error">
-                  审核意见：${escapeHtml(submission.review_note)}
-                </div>
-              `
-              : "";
+
+            const rejectedNote =
+              submission?.review_note
+                ? `
+                  <div class="message show error">
+                    审核意见：
+                    ${escapeHtml(
+                      submission.review_note
+                    )}
+                  </div>
+                `
+                : "";
+
 
             submissionHtml = `
               <div class="submission-box">
+
                 ${rejectedNote}
 
                 <div class="field">
+
                   <label class="field-label">
                     上传截图
                   </label>
@@ -706,9 +941,11 @@
                   <p class="hint">
                     请上传能够证明你完成任务的截图。
                   </p>
+
                 </div>
 
                 <div class="field">
+
                   <label class="field-label">
                     补充说明（可选）
                   </label>
@@ -717,6 +954,7 @@
                     data-note-input="${task.id}"
                     placeholder="如果截图需要补充说明，可以写在这里。"
                   ></textarea>
+
                 </div>
 
                 <button
@@ -725,81 +963,144 @@
                 >
                   提交审核
                 </button>
+
               </div>
             `;
           }
 
+
           return `
             <article class="task">
+
               <div class="task-head">
+
                 <div>
+
                   <div class="task-number">
-                    TASK ${String(task.task_order).padStart(2, "0")}
+                    TASK ${String(
+                      task.task_order
+                    ).padStart(2, "0")}
                   </div>
 
                   <h3 class="task-title">
-                    ${escapeHtml(task.title)}
+                    ${escapeHtml(
+                      task.title
+                    )}
                   </h3>
 
                   <p class="task-description">
-                    ${escapeHtml(task.short_description)}
+                    ${escapeHtml(
+                      task.short_description
+                    )}
                   </p>
+
                 </div>
 
-                <div class="status ${status === "unsubmitted" ? "" : status}">
+                <div
+                  class="status ${
+                    status === "unsubmitted"
+                      ? ""
+                      : status
+                  }"
+                >
                   ${statusText(status)}
                 </div>
+
               </div>
 
               ${submissionHtml}
+
             </article>
           `;
         })
         .join("");
 
-      document.querySelectorAll("[data-submit-task]").forEach((button) => {
-        button.addEventListener("click", () => {
-          submitTask(Number(button.dataset.submitTask), button);
+
+      document
+        .querySelectorAll(
+          "[data-submit-task]"
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            "click",
+            () => {
+              submitTask(
+                Number(
+                  button.dataset.submitTask
+                ),
+                button
+              );
+            }
+          );
+
         });
-      });
     }
+
 
     function renderLotteryHistory(draws) {
       if (!draws.length) {
+
         lotteryHistory.innerHTML = `
           <div class="empty">
             暂无抽奖记录。
           </div>
         `;
+
         return;
       }
 
-      lotteryHistory.innerHTML = draws
-        .map((draw) => {
-          const type =
-            draw.draw_type === "grand"
-              ? "结案大奖"
-              : "每日随机礼";
 
-          const time = draw.created_at
-            ? new Date(draw.created_at).toLocaleString("zh-CN")
-            : "";
+      lotteryHistory.innerHTML =
+        draws
+          .map((draw) => {
 
-          return `
-            <div class="history-item">
-              <strong>${escapeHtml(type)}</strong>
-              · ${escapeHtml(draw.result_name)}
-              <div class="hint">${escapeHtml(time)}</div>
-            </div>
-          `;
-        })
-        .join("");
+            const type =
+              draw.draw_type === "grand"
+                ? "结案大奖"
+                : "每日随机礼";
+
+            const time =
+              draw.created_at
+                ? new Date(
+                    draw.created_at
+                  ).toLocaleString("zh-CN")
+                : "";
+
+
+            return `
+              <div class="history-item">
+
+                <strong>
+                  ${escapeHtml(type)}
+                </strong>
+
+                ·
+                ${escapeHtml(
+                  draw.result_name
+                )}
+
+                <div class="hint">
+                  ${escapeHtml(time)}
+                </div>
+
+              </div>
+            `;
+          })
+          .join("");
     }
 
-    async function loadDashboard() {
-      if (!currentUser) return;
 
-      hideMessage(dashboardMessage);
+    async function loadDashboard() {
+      if (!currentUser) {
+        return;
+      }
+
+
+      hideMessage(
+        dashboardMessage
+      );
+
 
       const [
         tasksResult,
@@ -807,29 +1108,58 @@
         rewardsResult,
         drawsResult
       ] = await Promise.all([
-        supabase
+
+        supabaseClient
           .from("tasks")
           .select("*")
-          .order("task_order", { ascending: true }),
+          .order(
+            "task_order",
+            {
+              ascending: true
+            }
+          ),
 
-        supabase
+        supabaseClient
           .from("submissions")
           .select("*")
-          .eq("user_id", currentUser.id)
-          .order("submitted_at", { ascending: false }),
+          .eq(
+            "user_id",
+            currentUser.id
+          )
+          .order(
+            "submitted_at",
+            {
+              ascending: false
+            }
+          ),
 
-        supabase
+        supabaseClient
           .from("user_rewards")
           .select("*")
-          .eq("user_id", currentUser.id)
+          .eq(
+            "user_id",
+            currentUser.id
+          )
           .maybeSingle(),
 
-        supabase
+        supabaseClient
           .from("lottery_draws")
-          .select("id, draw_type, result_name, created_at")
-          .eq("user_id", currentUser.id)
-          .order("created_at", { ascending: false })
+          .select(
+            "id, draw_type, result_name, created_at"
+          )
+          .eq(
+            "user_id",
+            currentUser.id
+          )
+          .order(
+            "created_at",
+            {
+              ascending: false
+            }
+          )
+
       ]);
+
 
       if (tasksResult.error) {
         throw tasksResult.error;
@@ -847,296 +1177,665 @@
         throw drawsResult.error;
       }
 
-      tasks = tasksResult.data || [];
-      submissions = submissionsResult.data || [];
-      rewards = rewardsResult.data || null;
+
+      tasks =
+        tasksResult.data || [];
+
+      submissions =
+        submissionsResult.data || [];
+
+      rewards =
+        rewardsResult.data || null;
+
 
       renderStats();
+
       renderTasks();
-      renderLotteryHistory(drawsResult.data || []);
+
+      renderLotteryHistory(
+        drawsResult.data || []
+      );
     }
 
-    async function sendOtp() {
-      const email = emailInput.value.trim().toLowerCase();
 
-      hideMessage(loginMessage);
+    async function sendOtp() {
+
+      const email =
+        emailInput.value
+          .trim()
+          .toLowerCase();
+
+
+      hideMessage(
+        loginMessage
+      );
+
 
       if (!isSchoolEmail(email)) {
+
         showMessage(
           loginMessage,
           "请输入有效的 CUHK-Shenzhen 学校邮箱（@link.cuhk.edu.cn）。",
           true
         );
+
         return;
       }
 
+
+      if (!supabaseClient) {
+
+        showMessage(
+          loginMessage,
+          "登录系统还没有加载完成，请刷新页面后再试。",
+          true
+        );
+
+        return;
+      }
+
+
       sendOtpBtn.disabled = true;
-      sendOtpBtn.textContent = "正在发送……";
+
+      sendOtpBtn.textContent =
+        "正在发送……";
+
 
       try {
-        const { error } = await supabase.auth.signInWithOtp({
-          email,
-          options: {
-            shouldCreateUser: true
-          }
-        });
 
-        if (error) {
-          throw error;
+        const result =
+          await supabaseClient.auth.signInWithOtp(
+            {
+              email,
+
+              options: {
+                shouldCreateUser: true
+              }
+            }
+          );
+
+
+        if (result.error) {
+          throw result.error;
         }
 
-        emailInput.value = email;
-        emailStep.classList.add("hidden");
-        otpStep.classList.remove("hidden");
+
+        emailInput.value =
+          email;
+
+        emailStep.classList.add(
+          "hidden"
+        );
+
+        otpStep.classList.remove(
+          "hidden"
+        );
+
 
         showMessage(
           loginMessage,
           "验证码已经发送到你的学校邮箱，请查收邮件。"
         );
+
       } catch (error) {
-        console.error(error);
+
+        console.error(
+          "OTP ERROR:",
+          error
+        );
+
 
         showMessage(
           loginMessage,
-          error.message || "验证码发送失败，请稍后再试。",
+          error?.message ||
+            "验证码发送失败，请稍后再试。",
           true
         );
+
       } finally {
-        sendOtpBtn.disabled = false;
-        sendOtpBtn.textContent = "获取登录验证码";
+
+        sendOtpBtn.disabled =
+          false;
+
+        sendOtpBtn.textContent =
+          "获取登录验证码";
       }
     }
 
-    async function verifyOtp() {
-      const email = emailInput.value.trim().toLowerCase();
-      const token = otpInput.value.trim();
 
-      hideMessage(loginMessage);
+    async function verifyOtp() {
+
+      const email =
+        emailInput.value
+          .trim()
+          .toLowerCase();
+
+      const token =
+        otpInput.value.trim();
+
+
+      hideMessage(
+        loginMessage
+      );
+
 
       if (!isSchoolEmail(email)) {
+
         showMessage(
           loginMessage,
           "邮箱格式不正确。",
           true
         );
+
         return;
       }
 
+
       if (!/^\d{6}$/.test(token)) {
+
         showMessage(
           loginMessage,
           "请输入 6 位数字验证码。",
           true
         );
+
         return;
       }
 
-      verifyOtpBtn.disabled = true;
-      verifyOtpBtn.textContent = "正在登录……";
+
+      verifyOtpBtn.disabled =
+        true;
+
+      verifyOtpBtn.textContent =
+        "正在登录……";
+
 
       try {
-        const { data, error } = await supabase.auth.verifyOtp({
-          email,
-          token,
-          type: "email"
-        });
 
-        if (error) {
-          throw error;
+        const result =
+          await supabaseClient.auth.verifyOtp(
+            {
+              email,
+              token,
+              type: "email"
+            }
+          );
+
+
+        if (result.error) {
+          throw result.error;
         }
 
-        currentUser = data.user;
 
-        loginSection.classList.add("hidden");
-        dashboardSection.classList.remove("hidden");
+        currentUser =
+          result.data.user;
 
-        userEmail.textContent = currentUser.email || email;
+
+        loginSection.classList.add(
+          "hidden"
+        );
+
+        dashboardSection.classList.remove(
+          "hidden"
+        );
+
+
+        userEmail.textContent =
+          currentUser.email ||
+          email;
+
 
         await loadDashboard();
+
       } catch (error) {
-        console.error(error);
+
+        console.error(
+          "VERIFY OTP ERROR:",
+          error
+        );
+
 
         showMessage(
           loginMessage,
-          error.message || "登录失败，请检查验证码。",
+          error?.message ||
+            "登录失败，请检查验证码。",
           true
         );
+
       } finally {
-        verifyOtpBtn.disabled = false;
-        verifyOtpBtn.textContent = "登录";
+
+        verifyOtpBtn.disabled =
+          false;
+
+        verifyOtpBtn.textContent =
+          "登录";
       }
     }
 
-    async function submitTask(taskId, button) {
+
+    async function submitTask(
+      taskId,
+      button
+    ) {
+
       if (!currentUser) {
+
         showMessage(
           dashboardMessage,
           "请先登录。",
           true
         );
+
         return;
       }
 
-      const fileInput = document.querySelector(
-        `[data-file-input="${taskId}"]`
+
+      const fileInput =
+        document.querySelector(
+          `[data-file-input="${taskId}"]`
+        );
+
+
+      const noteInput =
+        document.querySelector(
+          `[data-note-input="${taskId}"]`
+        );
+
+
+      const file =
+        fileInput?.files?.[0];
+
+      const note =
+        noteInput?.value?.trim() ||
+        "";
+
+
+      hideMessage(
+        dashboardMessage
       );
 
-      const noteInput = document.querySelector(
-        `[data-note-input="${taskId}"]`
-      );
-
-      const file = fileInput?.files?.[0];
-      const note = noteInput?.value?.trim() || "";
-
-      hideMessage(dashboardMessage);
 
       if (!file) {
+
         showMessage(
           dashboardMessage,
           "请先选择截图。",
           true
         );
+
         return;
       }
 
+
       if (!file.type.startsWith("image/")) {
+
         showMessage(
           dashboardMessage,
           "请上传图片格式的截图。",
           true
         );
+
         return;
       }
 
-      if (file.size > 10 * 1024 * 1024) {
+
+      if (
+        file.size >
+        10 * 1024 * 1024
+      ) {
+
         showMessage(
           dashboardMessage,
           "截图不能超过 10MB。",
           true
         );
+
         return;
       }
 
-      button.disabled = true;
-      button.textContent = "正在提交……";
+
+      button.disabled =
+        true;
+
+      button.textContent =
+        "正在提交……";
+
 
       try {
-        const extension =
-          file.name.split(".").pop()?.toLowerCase() || "png";
 
-        const safeExtension = extension.replace(
-          /[^a-z0-9]/g,
-          ""
-        ) || "png";
+        const extension =
+          file.name
+            .split(".")
+            .pop()
+            ?.toLowerCase() ||
+          "png";
+
+
+        const safeExtension =
+          extension.replace(
+            /[^a-z0-9]/g,
+            ""
+          ) || "png";
+
+
+        const randomId =
+          crypto.randomUUID
+            ? crypto.randomUUID()
+            : `${Date.now()}-${Math.random()
+                .toString(36)
+                .slice(2)}`;
+
 
         const filePath =
-          `${currentUser.id}/${taskId}/${crypto.randomUUID()}.${safeExtension}`;
+          `${currentUser.id}/${taskId}/${randomId}.${safeExtension}`;
 
-        const uploadResult = await supabase.storage
-          .from("maven-submissions")
-          .upload(filePath, file, {
-            cacheControl: "3600",
-            upsert: false
-          });
+
+        const uploadResult =
+          await supabaseClient.storage
+            .from("maven-submissions")
+            .upload(
+              filePath,
+              file,
+              {
+                cacheControl: "3600",
+                upsert: false
+              }
+            );
+
 
         if (uploadResult.error) {
           throw uploadResult.error;
         }
 
-        const insertResult = await supabase
-          .from("submissions")
-          .insert({
-            user_id: currentUser.id,
-            task_id: taskId,
-            screenshot_path: filePath,
-            note
-          });
+
+        const insertResult =
+          await supabaseClient
+            .from("submissions")
+            .insert({
+              user_id:
+                currentUser.id,
+
+              task_id:
+                taskId,
+
+              screenshot_path:
+                filePath,
+
+              note
+            });
+
 
         if (insertResult.error) {
           throw insertResult.error;
         }
+
 
         showMessage(
           dashboardMessage,
           "证据提交成功，等待审核。"
         );
 
+
         await loadDashboard();
+
       } catch (error) {
-        console.error(error);
+
+        console.error(
+          "SUBMISSION ERROR:",
+          error
+        );
+
 
         showMessage(
           dashboardMessage,
-          error.message || "提交失败，请稍后再试。",
+          error?.message ||
+            "提交失败，请稍后再试。",
           true
         );
+
       } finally {
-        button.disabled = false;
-        button.textContent = "提交审核";
+
+        button.disabled =
+          false;
+
+        button.textContent =
+          "提交审核";
       }
     }
 
+
     async function logout() {
-      await supabase.auth.signOut();
+
+      if (supabaseClient) {
+        await supabaseClient.auth.signOut();
+      }
+
 
       currentUser = null;
+
       tasks = [];
+
       submissions = [];
+
       rewards = null;
 
-      dashboardSection.classList.add("hidden");
-      loginSection.classList.remove("hidden");
 
-      emailStep.classList.remove("hidden");
-      otpStep.classList.add("hidden");
+      dashboardSection.classList.add(
+        "hidden"
+      );
+
+      loginSection.classList.remove(
+        "hidden"
+      );
+
+
+      emailStep.classList.remove(
+        "hidden"
+      );
+
+      otpStep.classList.add(
+        "hidden"
+      );
+
 
       otpInput.value = "";
 
-      hideMessage(loginMessage);
-      hideMessage(dashboardMessage);
+
+      hideMessage(
+        loginMessage
+      );
+
+      hideMessage(
+        dashboardMessage
+      );
     }
 
+
     async function initialize() {
+
       try {
-        const { data, error } = await supabase.auth.getSession();
+
+        /*
+          第一步：
+          确认 Supabase JS 是否已经存在。
+        */
+
+        if (!window.supabase) {
+
+          showSystemStatus(
+            "正在切换备用 Supabase 连接……"
+          );
+
+          await loadSupabaseFallback();
+        }
+
+
+        if (!window.supabase) {
+
+          throw new Error(
+            "Supabase JavaScript 库没有成功加载。"
+          );
+        }
+
+
+        /*
+          第二步：
+          读取 Supabase 配置。
+        */
+
+        const config =
+          window.SUPABASE_CONFIG || {};
+
+
+        if (
+          !config.url ||
+          !config.publishableKey
+        ) {
+
+          throw new Error(
+            "Supabase 配置文件没有正确加载。"
+          );
+        }
+
+
+        /*
+          第三步：
+          创建客户端。
+        */
+
+        supabaseClient =
+          window.supabase.createClient(
+            config.url,
+            config.publishableKey
+          );
+
+
+        showSystemStatus(
+          "登录系统已连接，可以输入学校邮箱。",
+          "ok"
+        );
+
+
+        /*
+          第四步：
+          检查已有登录状态。
+        */
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient.auth.getSession();
+
 
         if (error) {
           throw error;
         }
 
-        if (data.session?.user) {
-          currentUser = data.session.user;
 
-          loginSection.classList.add("hidden");
-          dashboardSection.classList.remove("hidden");
+        if (
+          data?.session?.user
+        ) {
 
-          userEmail.textContent = currentUser.email || "";
+          currentUser =
+            data.session.user;
+
+
+          loginSection.classList.add(
+            "hidden"
+          );
+
+          dashboardSection.classList.remove(
+            "hidden"
+          );
+
+
+          userEmail.textContent =
+            currentUser.email ||
+            "";
+
 
           await loadDashboard();
         }
+
       } catch (error) {
-        console.error(error);
+
+        console.error(
+          "INITIALIZE ERROR:",
+          error
+        );
+
+
+        showSystemStatus(
+          `登录系统加载失败：${
+            error?.message ||
+            "未知错误"
+          }`,
+          "error"
+        );
+
 
         showMessage(
           loginMessage,
-          "无法读取登录状态，请刷新页面后重试。",
+          `登录系统暂时无法连接：${
+            error?.message ||
+            "未知错误"
+          }`,
           true
         );
       }
     }
 
-    sendOtpBtn.addEventListener("click", sendOtp);
-    verifyOtpBtn.addEventListener("click", verifyOtp);
-    logoutBtn.addEventListener("click", logout);
 
-    backToEmailBtn.addEventListener("click", () => {
-      otpStep.classList.add("hidden");
-      emailStep.classList.remove("hidden");
-      otpInput.value = "";
-      hideMessage(loginMessage);
-    });
+    /*
+      所有按钮事件都在这里绑定。
+    */
+
+    sendOtpBtn.addEventListener(
+      "click",
+      sendOtp
+    );
+
+
+    verifyOtpBtn.addEventListener(
+      "click",
+      verifyOtp
+    );
+
+
+    logoutBtn.addEventListener(
+      "click",
+      logout
+    );
+
+
+    backToEmailBtn.addEventListener(
+      "click",
+      () => {
+
+        otpStep.classList.add(
+          "hidden"
+        );
+
+        emailStep.classList.remove(
+          "hidden"
+        );
+
+        otpInput.value = "";
+
+        hideMessage(
+          loginMessage
+        );
+      }
+    );
+
+
+    /*
+      最后启动整个登录系统。
+    */
 
     initialize();
   </script>
+
 </body>
 </html>
