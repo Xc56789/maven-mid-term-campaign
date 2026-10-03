@@ -45,7 +45,8 @@ def file_asset(path, mime, filename=None):
 def build_html():
     assets = {}
 
-    # 只生成「线索档案版」
+    # 目前页面只显示「线索档案版」
+    # 但仓库中的其他版本素材仍然保留
     for style in campaign.STYLES:
         for kind, ext, mime in [
             ("poster", "png", "image/png"),
@@ -145,8 +146,12 @@ def build_html():
             """
         )
 
-    # 只保留 archive
-    archive = campaign.STYLES[0]
+    # 当前页面只使用 archive
+    archive = next(
+        style
+        for style in campaign.STYLES
+        if style["id"] == "archive"
+    )
 
     variants = {
         "archive": {
@@ -231,6 +236,7 @@ def build_html():
     <nav aria-label="页面导航">
         <a href="#clues">任务</a>
         <a href="#gifts">礼物</a>
+        <a href="#my-case">我的案件</a>
         <a href="#downloads">下载</a>
     </nav>
 </header>
@@ -298,6 +304,34 @@ def build_html():
     <div class="tasks">
         {"".join(steps)}
     </div>
+
+</section>
+
+
+<section class="case-entry" id="my-case">
+
+    <div class="case-entry-content">
+
+        <p class="audience">
+            CASE FILE / MY CASE
+        </p>
+
+        <h2>我的案件</h2>
+
+        <p>
+            完成任务后，提交学习结果截图。
+            审核通过后，即可获得每日抽奖机会。
+        </p>
+
+        <p class="note">
+            使用学校邮箱登录，查看任务审核状态与抽奖资格。
+        </p>
+
+    </div>
+
+    <a class="primary" href="#my-case">
+        进入我的案件
+    </a>
 
 </section>
 
